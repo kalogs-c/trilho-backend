@@ -94,6 +94,7 @@ expButton.addEventListener('click', () => {
 
     inputTransactionName.value = ''
     inputTransactionAmount.value = ''
+    hideAddPage()
 })
 
 incButton.addEventListener('click', () => {
@@ -117,4 +118,5 @@ incButton.addEventListener('click', () => {
 
     inputTransactionName.value = ''
     inputTransactionAmount.value = ''
+    hideAddPage()
 })
