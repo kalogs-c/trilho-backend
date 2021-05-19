@@ -4,6 +4,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script defer src="https://use.fontawesome.com/releases/v5.15.3/js/all.js"
+    integrity="sha384-haqrlim99xjfMxRP6EWtafs0sB1WKcMdynwZleuUSwJR0mDeRYbhtY+KPMr+JL6f"
+    crossorigin="anonymous">
+  </script>
   <link rel="stylesheet" href="css/style.css" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <title>ego || Controle de gastos</title>
@@ -16,7 +20,7 @@
     <div class="saldo">
       <h4>Saldo atual</h4>
       <h1 id="balance" class="balance"> 0.00</h1>
-      <a href="#text"><button>Adicionar transação</button></a>
+      <button class="open-add_button"><i class="fas fa-plus"></i>
     </div>
 
     <div class="inc-exp-container">
@@ -31,44 +35,49 @@
       </div>
     </div>
 
-    <h3>Transações</h3>
+    <h3>Transações</button></h3>
 
     <ul id="transactions" class="transactions"></ul>
+    <div class="download">
+      <h4>Baixe o nosso app</h4>
+      <a href="ego.apk" download=""><i class="fab fa-android"></i></a>
+    </div>
 
-    <h3>Adicionar transação</h3>
-
-    <form id="form">
-      <div class="form-control">
-        <label for="text">Nome da transação</label>
-        <input autofocus type="text" id="text" placeholder="Digite o nome da transação..." />
-      </div>
-
-      <div class="form-control">
-        <div class="amont-div">
-          <label for="amount">Valor da transação</label>
-        </div>
-
-        <input type="number" id="amount" placeholder="Digite o valor..." />
-      </div>
-
-      <div class="inc-add">
-        <div>
-          <button class="add-button inc-button" id="inc-button">Adicionar <br> receita</button>
-        </div>
-
-        <div class="division">
-
-        </div>
-
-        <div>
-          <button class="add-button exp-button" id="exp-button">Adicionar <br> despesa</button>
-        </div>
-      </div>
-
-      <footer>Fabrica Logs. / Todos os direitos reservados.</footer>
-    </form>
+    <footer class="logs-name">Fabrica Logs. / Todos os direitos reservados.</footer>
   </div>
+  <form id="form" class="form">
+    <div class="form-control">
+      <label for="text">Nome da transação</label>
+      <input autofocus type="text" id="text" placeholder="Digite o nome da transação..." />
+    </div>
 
+    <div class="form-control">
+      <div class="amont-div">
+        <label for="amount">Valor da transação</label>
+      </div>
+
+      <input type="number" id="amount" placeholder="Digite o valor..." />
+    </div>
+
+    <div class="inc-add">
+      <div>
+        <button class="add-button inc-button" id="inc-button">Adicionar <br> receita</button>
+      </div>
+
+      <div class="division">
+
+      </div>
+
+      <div>
+        <button class="add-button exp-button" id="exp-button">Adicionar <br> despesa</button>
+      </div>
+    </div>
+  </form>
+  <footer class="open-add-buton-area">    
+    
+  </footer>
+
+  <script src="js/animation.js"></script>
   <script src="js/script.js"></script>
 </body>
 

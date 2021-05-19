@@ -13,11 +13,13 @@
 body {
     color: #210B2C;
     background-color: #ffebec91;
+    position: relative;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     justify-items: center;
     align-items: center;
+    height: 100%;
 }
 
 h2 {
@@ -63,20 +65,9 @@ h1 {
 }
 
 .saldo button {
-    cursor: pointer;
     grid-area: btn;
-    background-color: transparent;
-    border: none;
-    min-width: fit-content;
-    min-height: fit-content;
-    color: #FF999E;
-    transform: translateY(70%);
-    font-size: 1rem;
-    padding: 5px;
-    transition: all ease 0.3s;
-    letter-spacing: 1px;
     justify-self: flex-end;
-    align-self: flex-end;
+    margin-right: 10px;
 }
 
 .saldo button:hover {
@@ -92,6 +83,9 @@ h3 {
     opacity: 0.5;
     padding-bottom: 2px;
     margin: 25px 0 1px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
 }
 
 h4 {
@@ -271,6 +265,21 @@ input[type='number']:hover {
     transform: translate(-130%, -50%);
 }
 
+.form {
+    position: fixed;
+    background-color: #ff999e;
+    width: 90%;
+    padding: 0 12.5px;
+    border-radius: 7px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    margin-top: 30%;
+    display: none;
+}
+
+.blur {
+    filter: blur(10px);
+}
+
 .inc-add {
     background-color: rgb(255, 255, 255);
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.04);
@@ -338,7 +347,40 @@ input[type='number']:hover {
     padding: 0;
 }
 
-footer {
+.download {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.download a {
+    color: #F48498;
+    font-size: 2rem;
+}
+
+.open-add_button {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50px;
+    border: none;
+    background-color: #ff2e60;
+    opacity: 1;
+    cursor: pointer;
+    transition: all ease 0.4s;
+}
+
+.open-add_button:hover {
+    border-radius: 12px;
+}
+
+.fa-plus { 
+    color: #fff;
+    font-size: 1.25rem;
+    transition: all ease 0.3s;
+}
+
+.logs-name {
     text-align: center;
     font-style: italic;
     font-size: 0.8rem;
