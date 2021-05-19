@@ -273,19 +273,28 @@ input[type='number']:hover {
     padding: 0 12.5px;
     border-radius: 7px;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-    margin-top: 30%;
+    margin-top: 150px;
     display: none;
 }
 
-.form .fa-times {
-    position: fixed;
-    right: 50px;
-    top: 19.2%;
+.close-button {
+    border: none;
+    background-color: transparent;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+.form-control {
+    width: 100%;
+}
+
+.fa-times {
     cursor: pointer;
 }
 
 .close-button-div {
-    height: 20px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .blur {
@@ -404,6 +413,10 @@ input[type='number']:hover {
     color: #fff;
     font-size: 1.5rem;
     transition: all ease 0.3s;
+}
+
+.rotate {
+    transform: rotate(45deg);
 }
 
 .logs-name {
