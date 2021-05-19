@@ -154,6 +154,7 @@ input[type='number'] {
   width: 100%;
   transition: ease all 0.4s;
   margin: 10px 0;
+  outline: none;
 }
 
 input[type='text']:hover,
@@ -267,13 +268,24 @@ input[type='number']:hover {
 
 .form {
     position: fixed;
-    background-color: #ff999e;
+    background-color: rgb(252, 252, 252);
     width: 90%;
     padding: 0 12.5px;
     border-radius: 7px;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
     margin-top: 30%;
     display: none;
+}
+
+.form .fa-times {
+    position: fixed;
+    right: 50px;
+    top: 19.2%;
+    cursor: pointer;
+}
+
+.close-button-div {
+    height: 20px;
 }
 
 .blur {
@@ -348,6 +360,7 @@ input[type='number']:hover {
 }
 
 .download {
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -360,23 +373,36 @@ input[type='number']:hover {
 }
 
 .open-add_button {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50px;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 7px;
     border: none;
     background-color: #ff2e60;
     opacity: 1;
     cursor: pointer;
     transition: all ease 0.4s;
+    transform: translateY(-20px);
+}
+
+.open-add-button-area {
+    position: fixed;
+    bottom: 0px;
+    text-align: center;
+    background-color: #d387ab;
+    background-image: linear-gradient(315deg, #d387ab 0%, #b279a7 74%);
+    overflow: visible;
+    height: 30px;
+    width: 100%;
+    z-index: 1000;
 }
 
 .open-add_button:hover {
-    border-radius: 12px;
+    border-radius: 10px;
 }
 
 .fa-plus { 
     color: #fff;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     transition: all ease 0.3s;
 }
 

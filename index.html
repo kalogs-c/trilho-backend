@@ -20,7 +20,6 @@
     <div class="saldo">
       <h4>Saldo atual</h4>
       <h1 id="balance" class="balance"> 0.00</h1>
-      <button class="open-add_button"><i class="fas fa-plus"></i>
     </div>
 
     <div class="inc-exp-container">
@@ -45,9 +44,13 @@
 
     <footer class="logs-name">Fabrica Logs. / Todos os direitos reservados.</footer>
   </div>
-  <form id="form" class="form">
+  <form id="form" class="form"> 
     <div class="form-control">
-      <label for="text">Nome da transação</label>
+      <div class="close-button-div">
+        <label for="text">Nome da transação</label>
+        <button class="close-button"><i class="fas fa-times"></i></button>
+      </div>
+        
       <input autofocus type="text" id="text" placeholder="Digite o nome da transação..." />
     </div>
 
@@ -73,9 +76,9 @@
       </div>
     </div>
   </form>
-  <footer class="open-add-buton-area">    
-    
-  </footer>
+  <div class="open-add-button-area">
+    <button class="open-add_button"><i class="fas fa-plus"></i>
+  </div>
 
   <script src="js/animation.js"></script>
   <script src="js/script.js"></script>
