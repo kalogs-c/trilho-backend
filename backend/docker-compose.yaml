@@ -1,0 +1,50 @@
+version: '3.3'
+
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dev.Dockerfile
+    container_name: app
+    networks:
+      - ego-network
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/app
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:5.7
+    container_name: db
+    ports: 
+      - 3306:3306
+    environment: 
+      - MYSQL_ROOT_HOST=${DB_HOST} 
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${TEST_DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    networks:
+      - ego-network
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    depends_on:
+      - mysql
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=${DB_USER}
+      - PMA_PORT=${DB_PORT}
+      - PMA_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 9090:80
+    restart: always
+    networks:
+      - ego-network
+    
+networks:
+  ego-network:
+    driver: bridge
