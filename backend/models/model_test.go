@@ -13,7 +13,7 @@ import (
 var serverInstance = server.Server{}
 
 func TestMain(m *testing.M) {
-	err := godotenv.Load(os.ExpandEnv("./.env"))
+	err := godotenv.Load(os.ExpandEnv("./../.env"))
 	if err != nil {
 		log.Fatalf("Error loading env %v\n", err)
 	}

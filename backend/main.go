@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/kalogsc/ego/seed"
 	"github.com/kalogsc/ego/server"
 )
 
@@ -16,7 +17,12 @@ func main() {
 		log.Fatalf("Error getting env's. Err: %v", err)
 	}
 
-	serverInstance.Initialize(os.Getenv("DB_NAME"))
+	if len(os.Args) > 1 && (os.Args[1] == "--test" || os.Args[1] == "-t") {
+		serverInstance.Initialize(os.Getenv("TEST_DB_NAME"))
+		seed.Load(serverInstance.DB)
+	} else {
+		serverInstance.Initialize(os.Getenv("DB_NAME"))
+	}
 
 	serverInstance.Run(":8080")
 }

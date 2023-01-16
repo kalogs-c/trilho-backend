@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/kalogs-c/piadocas/model"
+	"github.com/kalogsc/ego/models"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
@@ -21,7 +21,7 @@ type Server struct {
 
 func (server *Server) InstanciateDB(DbName string) error {
 	var err error
-	DbUrl := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_PORT"), os.Getenv("DB_HOST"), DbName)
+	DbUrl := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), DbName)
 	server.DB, err = gorm.Open("mysql", DbUrl)
 	if err != nil {
 		return err
@@ -37,7 +37,8 @@ func (server *Server) Initialize(DbName string) {
 	}
 	fmt.Println("Connected to mysql database.")
 
-	server.DB.Debug().AutoMigrate(&model.Joke{})
+	server.DB.Debug().AutoMigrate(&models.User{})
+	server.DB.Debug().AutoMigrate(&models.Transaction{})
 
 	server.Router = mux.NewRouter()
 

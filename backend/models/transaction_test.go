@@ -6,39 +6,71 @@ import (
 	"github.com/kalogsc/ego/models"
 )
 
-var transaction models.Transaction = models.Transaction{
+var transaction *models.Transaction = &models.Transaction{
 	Amount:  250.0,
 	Name:    "Bread",
-	OwnerId: user.ID,
+	OwnerId: 1,
 }
 
 func TestCreateTransaction(t *testing.T) {
 	transactionInstance, err := transaction.Save(serverInstance.DB)
 	if err != nil {
-		t.Errorf("this is the error creating an transaction: %v\n", err)
+		t.Errorf("error creating an transaction: %v\n", err)
 		return
 	}
 
 	if transactionInstance.Name != transaction.Name {
 		t.Errorf("Expected name field be equal %v\n", transaction.Name)
+		return
 	}
 	if transactionInstance.Amount != transaction.Amount {
 		t.Errorf("Expected lastname field be equal %f\n", transaction.Amount)
+		return
 	}
 	if transactionInstance.OwnerId != transaction.OwnerId {
 		t.Errorf("Expected email field be equal %d\n", transaction.OwnerId)
+		return
 	}
+
+	transaction = transactionInstance
 }
 
 func TestCollectUserTransactions(t *testing.T) {
 	transactionList, err := transaction.CollectUserTransactions(serverInstance.DB)
 	if err != nil {
-		t.Errorf("this is the error listing the jokes: %v\n", err)
+		t.Errorf("error listing the transactions: %v\n", err)
 		return
 	}
 
 	if len(*transactionList) == 0 {
 		t.Errorf("empty list")
+		return
+	}
+}
+
+func TestUpdateTransaction(t *testing.T) {
+	transactionCopy := *transaction
+
+	transaction.Amount = 500
+	transaction.Name = "Potato"
+
+	err := transaction.UpdateTransaction(serverInstance.DB)
+	if err != nil {
+		t.Errorf("error updating transaction")
+		return
+	}
+
+	if transactionCopy.Name == transaction.Name {
+		t.Errorf("Expected name field not be equal %v\n", transaction.Name)
+		return
+	}
+	if transactionCopy.Amount == transaction.Amount {
+		t.Errorf("Expected lastname field not be equal %f\n", transaction.Amount)
+		return
+	}
+	if transactionCopy.OwnerId != transaction.OwnerId {
+		t.Errorf("Expected email field be equal %d\n", transaction.OwnerId)
+		return
 	}
 }
 

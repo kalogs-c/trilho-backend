@@ -6,7 +6,7 @@ import (
 	"github.com/kalogsc/ego/models"
 )
 
-var user models.User = models.User{
+var user *models.User = &models.User{
 	Name:     "Carlos",
 	LastName: "Henrique",
 	Email:    "carlos@email.com",
@@ -32,6 +32,8 @@ func TestCreateUser(t *testing.T) {
 	if userInstance.Password != user.Password {
 		t.Errorf("Expected password field be equal %v\n", user.Password)
 	}
+
+	user = userInstance
 }
 
 func TestGetUserData(t *testing.T) {
@@ -43,15 +45,60 @@ func TestGetUserData(t *testing.T) {
 
 	if userInstance.Name != user.Name {
 		t.Errorf("Expected name field be equal %v\n", user.Name)
+		return
 	}
 	if userInstance.LastName != user.LastName {
 		t.Errorf("Expected lastname field be equal %v\n", user.LastName)
+		return
 	}
 	if userInstance.Email != user.Email {
 		t.Errorf("Expected email field be equal %v\n", user.Email)
+		return
 	}
 	if userInstance.Password != user.Password {
 		t.Errorf("Expected password field be equal %v\n", user.Password)
+		return
+	}
+}
+
+func TestListUsers(t *testing.T) {
+	users, err := user.FindAllUsers(serverInstance.DB)
+	if err != nil {
+		t.Errorf("Failed list users %v", err)
+		return
+	}
+
+	if len(*users) < 1 {
+		t.Errorf("Failed list users %v", err)
+		return
+	}
+}
+
+func TestUpdateUser(t *testing.T) {
+	userCopy := *user
+
+	user.Name = "João"
+	user.LastName = "Caique"
+	user.Email = "jao@email.com"
+	user.Password = "Tomato123"
+
+	err := user.UpdateUser(serverInstance.DB)
+	if err != nil {
+		t.Errorf("error updating user")
+		return
+	}
+
+	if userCopy.Name == user.Name {
+		t.Errorf("Expected name field not be equal %v\n", user.Name)
+		return
+	}
+	if userCopy.LastName == user.LastName {
+		t.Errorf("Expected lastname field not be equal %v\n", user.LastName)
+		return
+	}
+	if userCopy.Email == user.Email {
+		t.Errorf("Expected email field not be equal %v\n", user.Email)
+		return
 	}
 }
 

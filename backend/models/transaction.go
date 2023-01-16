@@ -53,6 +53,24 @@ func (t *Transaction) Delete(db *gorm.DB) error {
 	return nil
 }
 
+func (t *Transaction) UpdateTransaction(db *gorm.DB) error {
+	db = db.Debug().Model(&Transaction{}).Where("id = ?", t.ID).Take(&Transaction{}).UpdateColumns(
+		map[string]interface{}{
+			"name":   t.Name,
+			"amount": t.Amount,
+		},
+	)
+	if db.Error != nil {
+		return db.Error
+	}
+
+	err := db.Debug().Model(&Transaction{}).Where("id = ?", t.ID).Take(&t).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (t *Transaction) CollectUserTransactions(db *gorm.DB) (*[]Transaction, error) {
 	var err error
 
