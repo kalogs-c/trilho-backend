@@ -9,6 +9,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kalogsc/ego/models"
 	"github.com/kalogsc/ego/server"
+	"github.com/kalogsc/ego/utils"
 )
 
 var serverInstance = server.Server{}
@@ -18,13 +19,15 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatalf("Error loading env %v\n", err)
 	}
-	Database()
+	database()
+	
+	utils.LoadSeed(serverInstance.DB)
 
 	os.Exit(m.Run())
 }
 
-func Database() {
-	err := serverInstance.InstanciateDB(os.Getenv("TEST_DB_NAME"))
+func database() {
+	err := serverInstance.InstanciateDB(os.Getenv("TEST_DB_NAME"), utils.DB_MODE_TEST)
 	if err != nil {
 		fmt.Println("Cannot connect to the database")
 		log.Fatal("This is the error: ", err)

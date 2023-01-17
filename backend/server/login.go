@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 
@@ -12,7 +13,7 @@ import (
 )
 
 func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
-	body, err :=  io.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
@@ -21,14 +22,26 @@ func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
 	user := models.User{}
 	err = json.Unmarshal(body, &user)
 	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	err = user.Validate("login")
+	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-	user.Validate("login")
 
 	token, err := server.SignIn(&user)
 	if err != nil {
-		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		switch err.Error() {
+		case bcrypt.ErrMismatchedHashAndPassword.Error():
+			responses.ERROR(w, http.StatusUnprocessableEntity, errors.New("incorrect password"))
+		case "record not found":
+			responses.ERROR(w, http.StatusNotFound, err)
+		default:
+			responses.ERROR(w, http.StatusInternalServerError, err)
+		}
 		return
 	}
 	responses.JSON(w, http.StatusOK, token)

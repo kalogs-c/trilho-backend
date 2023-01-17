@@ -16,7 +16,7 @@ type User struct {
 	Name      string    `json:"name" gorm:"size:100;not null"`
 	LastName  string    `json:"last_name" gorm:"size:100;not null"`
 	Email     string    `json:"email" gorm:"size:100;not null"`
-	Password  string    `json:"Password" gorm:"size:100;not null"`
+	Password  string    `json:"password" gorm:"size:100;not null"`
 	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
 }
 

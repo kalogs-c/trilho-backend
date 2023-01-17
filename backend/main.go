@@ -5,23 +5,22 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/kalogsc/ego/seed"
 	"github.com/kalogsc/ego/server"
+	"github.com/kalogsc/ego/utils"
 )
 
 var serverInstance server.Server = server.Server{}
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error getting env's. Err: %v", err)
-	}
-
 	if len(os.Args) > 1 && (os.Args[1] == "--test" || os.Args[1] == "-t") {
-		serverInstance.Initialize(os.Getenv("TEST_DB_NAME"))
-		seed.Load(serverInstance.DB)
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatalf("Error getting env's. Err: %v", err)
+		}
+		serverInstance.Initialize(os.Getenv("TEST_DB_NAME"), utils.DB_MODE_TEST)
+		utils.LoadSeed(serverInstance.DB)
 	} else {
-		serverInstance.Initialize(os.Getenv("DB_NAME"))
+		serverInstance.Initialize(os.Getenv("DB_NAME"), utils.DB_MODE_PROD)
 	}
 
 	serverInstance.Run(":8080")

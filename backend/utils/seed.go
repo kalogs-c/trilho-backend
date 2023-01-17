@@ -1,4 +1,4 @@
-package seed
+package utils
 
 import (
 	"log"
@@ -11,7 +11,7 @@ var users = []models.User{
 	{
 		Name:     "Peter",
 		LastName: "Parker",
-		Email:    "notspider@gmail.com",
+		Email:    "notspiderman@gmail.com",
 		Password: "web123",
 	},
 	{
@@ -33,7 +33,7 @@ var transactions = []models.Transaction{
 	},
 }
 
-func Load(db *gorm.DB) {
+func LoadSeed(db *gorm.DB) {
 	err := db.Debug().DropTableIfExists(&models.Transaction{}, &models.User{}).Error
 	if err != nil {
 		log.Fatalf("cannot drop table: %v", err)
@@ -49,13 +49,13 @@ func Load(db *gorm.DB) {
 	}
 
 	for i := range users {
-		err = db.Debug().Model(&models.User{}).Create(&users[i]).Error
+		_, err = users[i].Save(db)
 		if err != nil {
 			log.Fatalf("cannot seed users table: %v", err)
 		}
 		transactions[i].OwnerId = users[i].ID
 
-		err = db.Debug().Model(&models.Transaction{}).Create(&transactions[i]).Error
+		_, err = transactions[i].Save(db)
 		if err != nil {
 			log.Fatalf("cannot seed transactions table: %v", err)
 		}

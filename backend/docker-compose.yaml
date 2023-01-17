@@ -6,6 +6,8 @@ services:
       context: .
       dockerfile: Dev.Dockerfile
     container_name: app
+    env_file:
+      - ./.env
     networks:
       - ego-network
     ports:
@@ -16,12 +18,12 @@ services:
       - mysql
 
   mysql:
-    image: mysql:5.7
+    image: mysql:8.0
     container_name: db
     ports: 
       - 3306:3306
     environment: 
-      - MYSQL_ROOT_HOST=${DB_HOST} 
+      - MYSQL_ROOT_HOST=${TEST_DB_HOST} 
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=${TEST_DB_NAME}

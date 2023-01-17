@@ -1,0 +1,4 @@
+- Tests
+- Separe server from controllers
+- Deploy github actions
+- Doc

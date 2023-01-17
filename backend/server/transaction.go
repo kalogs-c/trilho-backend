@@ -31,6 +31,17 @@ func (server *Server) CreateTransaction(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
 	}
+
+	jwtUserId, err := auth.ExtractTokenID(r)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
+		return
+	}
+	if jwtUserId != uint32(ownerId) {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New(http.StatusText(http.StatusUnauthorized)))
+		return
+	}
+
 	transaction.OwnerId = uint32(ownerId)
 
 	transactionCreated, err := transaction.Save(server.DB)
@@ -44,12 +55,22 @@ func (server *Server) CreateTransaction(w http.ResponseWriter, r *http.Request) 
 
 func (server *Server) GetUserTransactions(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	transactionId, err := strconv.ParseInt(vars["user_id"], 10, 32)
+	ownerId, err := strconv.ParseInt(vars["user_id"], 10, 32)
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
 	}
 
-	transaction := models.Transaction{OwnerId: uint32(transactionId)}
+	jwtUserId, err := auth.ExtractTokenID(r)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
+		return
+	}
+	if jwtUserId != uint32(ownerId) {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New(http.StatusText(http.StatusUnauthorized)))
+		return
+	}
+
+	transaction := models.Transaction{OwnerId: uint32(ownerId)}
 	transactionsData, err := transaction.CollectUserTransactions(server.DB)
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
@@ -67,6 +88,12 @@ func (server *Server) UpdateTransaction(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	jwtUserID, err := auth.ExtractTokenID(r)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
+		return
+	}
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
@@ -80,13 +107,9 @@ func (server *Server) UpdateTransaction(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	transaction.ID = uint32(transactionId)
-	tokenID, err := auth.ExtractTokenID(r)
-	if err != nil {
+
+	if transaction.OwnerId != jwtUserID {
 		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
-		return
-	}
-	if tokenID != uint32(transactionId) {
-		responses.ERROR(w, http.StatusUnauthorized, errors.New(http.StatusText(http.StatusUnauthorized)))
 		return
 	}
 
