@@ -29,20 +29,20 @@ func (t *Transaction) validate() error {
 	return nil
 }
 
-func (t *Transaction) Save(db *gorm.DB) (*Transaction, error) {
+func (t *Transaction) Save(db *gorm.DB) error {
 	t.prepare()
 
 	var err error
 
 	err = t.validate()
 	if err != nil {
-		return &Transaction{}, err
+		return err
 	}
 	err = db.Debug().Create(&t).Error
 	if err != nil {
-		return &Transaction{}, err
+		return err
 	}
-	return t, nil
+	return nil
 }
 
 func (t *Transaction) Delete(db *gorm.DB) error {

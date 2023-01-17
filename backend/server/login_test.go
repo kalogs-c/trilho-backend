@@ -111,7 +111,7 @@ func TestLogin(t *testing.T) {
 
 		if v.statusCode != http.StatusOK && v.errorMessage != "" {
 			responseMap := make(map[string]interface{})
-			err = json.Unmarshal([]byte(rr.Body.Bytes()), &responseMap)
+			err = json.Unmarshal(rr.Body.Bytes(), &responseMap)
 			if err != nil {
 				fmt.Println(rr.Body.String())
 				t.Errorf("Cannot convert to json: %v", err)

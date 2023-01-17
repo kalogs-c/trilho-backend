@@ -14,48 +14,50 @@ var user *models.User = &models.User{
 }
 
 func TestCreateUser(t *testing.T) {
-	userInstance, err := user.Save(serverInstance.DB)
+	userCopy := *user;
+	err := user.Save(serverInstance.DB)
 	if err != nil {
 		t.Errorf("this is the error creating an user: %v\n", err)
 		return
 	}
 
-	if userInstance.Name != user.Name {
+	if userCopy.Name != user.Name {
 		t.Errorf("Expected name field be equal %v\n", user.Name)
 	}
-	if userInstance.LastName != user.LastName {
+	if userCopy.LastName != user.LastName {
 		t.Errorf("Expected lastname field be equal %v\n", user.LastName)
 	}
-	if userInstance.Email != user.Email {
+	if userCopy.Email != user.Email {
 		t.Errorf("Expected email field be equal %v\n", user.Email)
 	}
-	if userInstance.Password != user.Password {
+	if userCopy.Password != user.Password {
 		t.Errorf("Expected password field be equal %v\n", user.Password)
 	}
 
-	user = userInstance
+	user = &userCopy
 }
 
 func TestGetUserData(t *testing.T) {
-	userInstance, err := user.CollectUserData(serverInstance.DB)
+	userCopy := *user
+	err := user.CollectUserData(serverInstance.DB)
 	if err != nil {
 		t.Errorf("error getting user data: %v\n", err)
 		return
 	}
 
-	if userInstance.Name != user.Name {
+	if userCopy.Name != user.Name {
 		t.Errorf("Expected name field be equal %v\n", user.Name)
 		return
 	}
-	if userInstance.LastName != user.LastName {
+	if userCopy.LastName != user.LastName {
 		t.Errorf("Expected lastname field be equal %v\n", user.LastName)
 		return
 	}
-	if userInstance.Email != user.Email {
+	if userCopy.Email != user.Email {
 		t.Errorf("Expected email field be equal %v\n", user.Email)
 		return
 	}
-	if userInstance.Password != user.Password {
+	if userCopy.Password != user.Password {
 		t.Errorf("Expected password field be equal %v\n", user.Password)
 		return
 	}

@@ -67,30 +67,30 @@ func (u *User) Validate(mode string) error {
 	return nil
 }
 
-func (u *User) Save(db *gorm.DB) (*User, error) {
+func (u *User) Save(db *gorm.DB) error {
 	var err error
 
 	u.prepare()
 
 	err = u.Validate("add")
 	if err != nil {
-		return &User{}, err
+		return err
 	}
 
 	err = u.hashPassword()
 	if err != nil {
-		return &User{}, err
+		return err
 	}
 
 	err = db.Debug().Create(&u).Error
 	if err != nil {
 		if strings.Contains(err.Error(), "Error 1062:") {
-			return &User{}, errors.New("email already taken")
+			return errors.New("email already taken")
 		}
 		fmt.Println(err)
-		return &User{}, err
+		return err
 	}
-	return u, nil
+	return nil
 }
 
 func (u *User) Delete(db *gorm.DB) error {
@@ -134,15 +134,13 @@ func (u *User) UpdateUser(db *gorm.DB) error {
 	return nil
 }
 
-func (u *User) CollectUserData(db *gorm.DB) (*User, error) {
-	var err error
-
-	UserFromDB := User{}
-
-	err = db.Debug().Model(&User{}).Where("id = ?", u.ID).Find(&UserFromDB).Error
-	if err != nil {
-		return &User{}, err
+func (u *User) CollectUserData(db *gorm.DB) error {
+	err := db.Debug().Model(&User{}).Where("id = ?", u.ID).Take(&u).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return errors.New("user not found")
+	} else if err != nil {
+		return err
 	}
 
-	return &UserFromDB, nil
+	return nil
 }

@@ -49,13 +49,13 @@ func Load(db *gorm.DB) {
 	}
 
 	for i := range users {
-		_, err = users[i].Save(db)
+		err = users[i].Save(db)
 		if err != nil {
 			log.Fatalf("cannot seed users table: %v", err)
 		}
 		transactions[i].OwnerId = users[i].ID
 
-		_, err = transactions[i].Save(db)
+		err = transactions[i].Save(db)
 		if err != nil {
 			log.Fatalf("cannot seed transactions table: %v", err)
 		}

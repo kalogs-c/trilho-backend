@@ -44,13 +44,13 @@ func (server *Server) CreateTransaction(w http.ResponseWriter, r *http.Request) 
 
 	transaction.OwnerId = uint32(ownerId)
 
-	transactionCreated, err := transaction.Save(server.DB)
+	err = transaction.Save(server.DB)
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 	}
 
-	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.RequestURI, transactionCreated.ID))
-	responses.JSON(w, http.StatusCreated, transactionCreated)
+	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.RequestURI, transaction.ID))
+	responses.JSON(w, http.StatusCreated, transaction)
 }
 
 func (server *Server) GetUserTransactions(w http.ResponseWriter, r *http.Request) {

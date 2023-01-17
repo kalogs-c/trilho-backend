@@ -28,7 +28,7 @@ func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userCreated, err := user.Save(server.DB)
+	err = user.Save(server.DB)
 	if err != nil {
 		switch err.Error() {
 		case "email already taken":
@@ -39,26 +39,27 @@ func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.RequestURI, userCreated.ID))
-	responses.JSON(w, http.StatusCreated, userCreated)
+	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.RequestURI, user.ID))
+	responses.JSON(w, http.StatusCreated, user)
 }
 
 func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId, err := strconv.ParseInt(vars["id"], 10, 32)
 	if err != nil {
+		fmt.Println(err)
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return
 	}
 
 	user := models.User{ID: uint32(userId)}
-	usersData, err := user.CollectUserData(server.DB)
+	err = user.CollectUserData(server.DB)
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return
 	}
 
-	responses.JSON(w, http.StatusOK, usersData)
+	responses.JSON(w, http.StatusOK, user)
 }
 
 func (server *Server) ListUsers(w http.ResponseWriter, r *http.Request) {

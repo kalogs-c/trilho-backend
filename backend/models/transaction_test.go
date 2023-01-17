@@ -13,26 +13,27 @@ var transaction *models.Transaction = &models.Transaction{
 }
 
 func TestCreateTransaction(t *testing.T) {
-	transactionInstance, err := transaction.Save(serverInstance.DB)
+	transactionCopy := *transaction
+	err := transaction.Save(serverInstance.DB)
 	if err != nil {
 		t.Errorf("error creating an transaction: %v\n", err)
 		return
 	}
 
-	if transactionInstance.Name != transaction.Name {
+	if transactionCopy.Name != transaction.Name {
 		t.Errorf("Expected name field be equal %v\n", transaction.Name)
 		return
 	}
-	if transactionInstance.Amount != transaction.Amount {
+	if transactionCopy.Amount != transaction.Amount {
 		t.Errorf("Expected lastname field be equal %f\n", transaction.Amount)
 		return
 	}
-	if transactionInstance.OwnerId != transaction.OwnerId {
+	if transactionCopy.OwnerId != transaction.OwnerId {
 		t.Errorf("Expected email field be equal %d\n", transaction.OwnerId)
 		return
 	}
 
-	transaction = transactionInstance
+	transaction = &transactionCopy
 }
 
 func TestCollectUserTransactions(t *testing.T) {
