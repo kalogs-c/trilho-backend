@@ -30,7 +30,12 @@ func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	userCreated, err := user.Save(server.DB)
 	if err != nil {
-		responses.ERROR(w, http.StatusInternalServerError, err)
+		switch err.Error() {
+		case "email already taken":
+			responses.ERROR(w, http.StatusConflict, err)
+		default:
+			responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		}
 		return
 	}
 

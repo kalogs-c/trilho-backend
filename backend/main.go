@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/kalogsc/ego/seed"
 	"github.com/kalogsc/ego/server"
 	"github.com/kalogsc/ego/utils"
 )
@@ -18,8 +19,9 @@ func main() {
 			log.Fatalf("Error getting env's. Err: %v", err)
 		}
 		serverInstance.Initialize(os.Getenv("TEST_DB_NAME"), utils.DB_MODE_TEST)
-		utils.LoadSeed(serverInstance.DB)
+		seed.Load(serverInstance.DB)
 	} else {
+		seed.Load(serverInstance.DB)
 		serverInstance.Initialize(os.Getenv("DB_NAME"), utils.DB_MODE_PROD)
 	}
 

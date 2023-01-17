@@ -84,7 +84,7 @@ func TestCreateUser(t *testing.T) {
 				Password: "",
 			},
 			statusCode:   http.StatusUnprocessableEntity,
-			errorMessage: "Required Password",
+			errorMessage: "field 'Password' is required",
 		},
 	}
 

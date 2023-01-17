@@ -8,6 +8,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/kalogsc/ego/models"
+	"github.com/kalogsc/ego/seed"
 	"github.com/kalogsc/ego/server"
 	"github.com/kalogsc/ego/utils"
 )
@@ -20,8 +21,8 @@ func TestMain(m *testing.M) {
 		log.Fatalf("Error loading env %v\n", err)
 	}
 	database()
-	
-	utils.LoadSeed(serverInstance.DB)
+
+	seed.Load(serverInstance.DB)
 
 	os.Exit(m.Run())
 }

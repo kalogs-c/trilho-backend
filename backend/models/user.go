@@ -2,12 +2,14 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"html"
 	"strings"
 	"time"
 
 	"github.com/badoux/checkmail"
 	"github.com/jinzhu/gorm"
+	"github.com/kalogsc/ego/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -15,7 +17,7 @@ type User struct {
 	ID        uint32    `json:"id" gorm:"primary_key;unique;auto_increment"`
 	Name      string    `json:"name" gorm:"size:100;not null"`
 	LastName  string    `json:"last_name" gorm:"size:100;not null"`
-	Email     string    `json:"email" gorm:"size:100;not null"`
+	Email     string    `json:"email" gorm:"size:100;not null;unique"`
 	Password  string    `json:"password" gorm:"size:100;not null"`
 	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
 }
@@ -59,21 +61,33 @@ func (u *User) Validate(mode string) error {
 	if u.Password == "" {
 		return errors.New("field 'Password' is required")
 	}
+	if !utils.ValidatePassword(u.Password) {
+		return errors.New("field 'Password' must contain at least 6 digits")
+	}
 	return nil
 }
 
 func (u *User) Save(db *gorm.DB) (*User, error) {
-	u.prepare()
-	u.hashPassword()
-
 	var err error
+
+	u.prepare()
 
 	err = u.Validate("add")
 	if err != nil {
 		return &User{}, err
 	}
+
+	err = u.hashPassword()
+	if err != nil {
+		return &User{}, err
+	}
+
 	err = db.Debug().Create(&u).Error
 	if err != nil {
+		if strings.Contains(err.Error(), "Error 1062:") {
+			return &User{}, errors.New("email already taken")
+		}
+		fmt.Println(err)
 		return &User{}, err
 	}
 	return u, nil

@@ -1,4 +1,4 @@
-package utils
+package seed
 
 import (
 	"log"
@@ -33,7 +33,7 @@ var transactions = []models.Transaction{
 	},
 }
 
-func LoadSeed(db *gorm.DB) {
+func Load(db *gorm.DB) {
 	err := db.Debug().DropTableIfExists(&models.Transaction{}, &models.User{}).Error
 	if err != nil {
 		log.Fatalf("cannot drop table: %v", err)
