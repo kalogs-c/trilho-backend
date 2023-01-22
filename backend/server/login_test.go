@@ -13,7 +13,7 @@ import (
 
 func TestSignIn(t *testing.T) {
 	customUser := &[]*models.User{
-		&models.User{
+		{
 			Name:     "Alessia",
 			LastName: "Cara",
 			Email:    "amusic@gmail.com",
