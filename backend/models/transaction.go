@@ -24,7 +24,10 @@ func (t *Transaction) prepare() {
 
 func (t *Transaction) validate() error {
 	if t.Name == "" {
-		return errors.New("field 'Call' is required")
+		return errors.New("field 'Name' is required")
+	}
+	if t.OwnerId == 0 {
+		return errors.New("field 'OwnerId' cannot be zero")
 	}
 	return nil
 }
@@ -54,6 +57,11 @@ func (t *Transaction) Delete(db *gorm.DB) error {
 }
 
 func (t *Transaction) UpdateTransaction(db *gorm.DB) error {
+	t.prepare()
+	err := t.validate()
+	if err != nil {
+		return err
+	}
 	db = db.Debug().Model(&Transaction{}).Where("id = ?", t.ID).Take(&Transaction{}).UpdateColumns(
 		map[string]interface{}{
 			"name":   t.Name,
@@ -64,7 +72,7 @@ func (t *Transaction) UpdateTransaction(db *gorm.DB) error {
 		return db.Error
 	}
 
-	err := db.Debug().Model(&Transaction{}).Where("id = ?", t.ID).Take(&t).Error
+	err = db.Debug().Model(&Transaction{}).Where("id = ?", t.ID).Take(&t).Error
 	if err != nil {
 		return err
 	}
@@ -82,4 +90,15 @@ func (t *Transaction) CollectUserTransactions(db *gorm.DB) (*[]Transaction, erro
 	}
 
 	return &Transactions, nil
+}
+
+func (t *Transaction) CollectTransactionData(db *gorm.DB) error {
+	err := db.Debug().Model(&Transaction{}).Where("id = ?", t.ID).Take(&t).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return errors.New("transaction not found")
+	} else if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -2,6 +2,7 @@ package utils
 
 import (
 	"regexp"
+	"strings"
 )
 
 func ValidateName(name string) bool {
@@ -11,5 +12,5 @@ func ValidateName(name string) bool {
 }
 
 func ValidatePassword(password string) bool {
-	return len(password) > 5
+	return len(password) > 5 && !strings.Contains(password, " ")
 }

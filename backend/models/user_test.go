@@ -4,17 +4,17 @@ import (
 	"testing"
 
 	"github.com/kalogsc/ego/models"
+	"github.com/kalogsc/ego/seed"
 )
 
-var user *models.User = &models.User{
-	Name:     "Carlos",
-	LastName: "Henrique",
-	Email:    "carlos@email.com",
-	Password: "potato123",
-}
-
 func TestCreateUser(t *testing.T) {
-	userCopy := *user;
+	user := &models.User{
+		Name:     "Carlos",
+		LastName: "Henrique",
+		Email:    "carlos@email.com",
+		Password: "potato123",
+	}
+	userCopy := *user
 	err := user.Save(serverInstance.DB)
 	if err != nil {
 		t.Errorf("this is the error creating an user: %v\n", err)
@@ -30,7 +30,7 @@ func TestCreateUser(t *testing.T) {
 	if userCopy.Email != user.Email {
 		t.Errorf("Expected email field be equal %v\n", user.Email)
 	}
-	if userCopy.Password != user.Password {
+	if userCopy.Password == user.Password {
 		t.Errorf("Expected password field be equal %v\n", user.Password)
 	}
 
@@ -38,8 +38,23 @@ func TestCreateUser(t *testing.T) {
 }
 
 func TestGetUserData(t *testing.T) {
+	err := seed.LoadCustomUsers(serverInstance.DB, &[]*models.User{
+		{
+			Name:     "Zoro",
+			LastName: "Roronoa",
+			Email:    "zoro@email.com",
+			Password: "sword123",
+		},
+	})
+	if err != nil {
+		t.Errorf("failed to seed user: %v\n", err)
+		return
+	}
+	user := &models.User{
+		Email:    "zoro@email.com",
+	}
+	err = user.CollectUserData(serverInstance.DB)
 	userCopy := *user
-	err := user.CollectUserData(serverInstance.DB)
 	if err != nil {
 		t.Errorf("error getting user data: %v\n", err)
 		return
@@ -64,6 +79,7 @@ func TestGetUserData(t *testing.T) {
 }
 
 func TestListUsers(t *testing.T) {
+	user := &models.User{}
 	users, err := user.FindAllUsers(serverInstance.DB)
 	if err != nil {
 		t.Errorf("Failed list users %v", err)
@@ -77,6 +93,20 @@ func TestListUsers(t *testing.T) {
 }
 
 func TestUpdateUser(t *testing.T) {
+	user := &models.User{
+		ID:       1,
+		Name:     "Monkey",
+		LastName: "D. Luffy",
+		Email:    "luffy@email.com",
+		Password: "gomu123",
+	}
+	err := seed.LoadCustomUsers(serverInstance.DB, &[]*models.User{
+		user,
+	})
+	if err != nil {
+		t.Errorf("failed to seed user: %v\n", err)
+		return
+	}
 	userCopy := *user
 
 	user.Name = "João"
@@ -84,9 +114,9 @@ func TestUpdateUser(t *testing.T) {
 	user.Email = "jao@email.com"
 	user.Password = "Tomato123"
 
-	err := user.UpdateUser(serverInstance.DB)
+	err = user.UpdateUser(serverInstance.DB)
 	if err != nil {
-		t.Errorf("error updating user")
+		t.Errorf("error updating user %v", err)
 		return
 	}
 
@@ -105,7 +135,21 @@ func TestUpdateUser(t *testing.T) {
 }
 
 func TestDeleteUser(t *testing.T) {
-	err := user.Delete(serverInstance.DB)
+	user := &models.User{
+		ID:       1,
+		Name:     "Monkey",
+		LastName: "D. Luffy",
+		Email:    "luffy@email.com",
+		Password: "gomu123",
+	}
+	err := seed.LoadCustomUsers(serverInstance.DB, &[]*models.User{
+		user,
+	})
+	if err != nil {
+		t.Errorf("failed to seed user: %v\n", err)
+		return
+	}
+	err = user.Delete(serverInstance.DB)
 	if err != nil {
 		t.Errorf("error deleting user: %v\n", err)
 		return

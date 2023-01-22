@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/joho/godotenv"
+	"github.com/kalogsc/ego/seed"
 	"github.com/kalogsc/ego/server"
 	"github.com/kalogsc/ego/utils"
 )
@@ -31,4 +32,6 @@ func Database() {
 	} else {
 		fmt.Println("We are connected to the database")
 	}
+
+	seed.Load(serverInstance.DB)
 }

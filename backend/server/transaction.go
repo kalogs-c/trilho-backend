@@ -18,18 +18,21 @@ func (server *Server) CreateTransaction(w http.ResponseWriter, r *http.Request) 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
 	}
 
 	transaction := models.Transaction{}
 	err = json.Unmarshal(body, &transaction)
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
 	}
 
 	vars := mux.Vars(r)
 	ownerId, err := strconv.ParseInt(vars["user_id"], 10, 32)
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
+		return
 	}
 
 	jwtUserId, err := auth.ExtractTokenID(r)
@@ -46,14 +49,15 @@ func (server *Server) CreateTransaction(w http.ResponseWriter, r *http.Request) 
 
 	err = transaction.Save(server.DB)
 	if err != nil {
-		responses.ERROR(w, http.StatusInternalServerError, err)
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
 	}
 
 	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.RequestURI, transaction.ID))
 	responses.JSON(w, http.StatusCreated, transaction)
 }
 
-func (server *Server) GetUserTransactions(w http.ResponseWriter, r *http.Request) {
+func (server *Server) ListUserTransactions(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	ownerId, err := strconv.ParseInt(vars["user_id"], 10, 32)
 	if err != nil {
@@ -115,7 +119,7 @@ func (server *Server) UpdateTransaction(w http.ResponseWriter, r *http.Request) 
 
 	err = transaction.UpdateTransaction(server.DB)
 	if err != nil {
-		responses.ERROR(w, http.StatusInternalServerError, err)
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
 	responses.JSON(w, http.StatusOK, transaction)
@@ -128,7 +132,21 @@ func (server *Server) DeleteTransaction(w http.ResponseWriter, r *http.Request) 
 		responses.ERROR(w, http.StatusBadRequest, err)
 	}
 
-	transaction := models.Transaction{ID: uint32(transactionId)}
+	transaction := models.Transaction{
+		ID: uint32(transactionId),
+	}
+	transaction.CollectTransactionData(server.DB)
+
+	jwtUserId, err := auth.ExtractTokenID(r)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
+		return
+	}
+	if jwtUserId != uint32(transaction.OwnerId) {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New(http.StatusText(http.StatusUnauthorized)))
+		return
+	}
+
 	err = transaction.Delete(server.DB)
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, err)

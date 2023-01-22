@@ -3,15 +3,28 @@ package server_test
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/kalogsc/ego/models"
+	"github.com/kalogsc/ego/seed"
 )
 
 func TestSignIn(t *testing.T) {
+	customUser := &[]*models.User{
+		&models.User{
+			Name:     "Alessia",
+			LastName: "Cara",
+			Email:    "amusic@gmail.com",
+			Password: "coxinha123",
+		},
+	}
+	err := seed.LoadCustomUsers(serverInstance.DB, customUser)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	users := &[]models.User{
 		{
 			Email:    "amusic@gmail.com",
@@ -42,7 +55,6 @@ func TestSignIn(t *testing.T) {
 		}
 
 		if err.Error() != *expectedErr {
-			fmt.Println(err)
 			t.Errorf("invalid error, expected to be %v but was %v", *expectedErr, err.Error())
 		} else if err != nil {
 			t.Errorf("error while sign in: %e", err)
@@ -55,47 +67,81 @@ func TestSignIn(t *testing.T) {
 }
 
 func TestLogin(t *testing.T) {
+	customUsers := &[]*models.User{
+		{
+			Name:     "Peter",
+			LastName: "Parker",
+			Email:    "notspiderman@gmail.com",
+			Password: "web123",
+		},
+	}
+	err := seed.LoadCustomUsers(serverInstance.DB, customUsers)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	users := &[]struct {
-		inputJSON    string
+		user         models.User
 		statusCode   int
-		email        string
-		password     string
 		errorMessage string
 	}{
 		{
-			inputJSON:    `{"email": "notspiderman@gmail.com", "password": "web123"}`,
+			user: models.User{
+				Email:    "notspiderman@gmail.com",
+				Password: "web123",
+			},
 			statusCode:   http.StatusOK,
 			errorMessage: "",
 		},
 		{
-			inputJSON:    `{"email": "incorrect@gmail.com", "password": "notexist"}`,
+			user: models.User{
+				Email:    "incorrect@gmail.com",
+				Password: "notexist",
+			},
 			statusCode:   http.StatusNotFound,
 			errorMessage: "record not found",
 		},
 		{
-			inputJSON:    `{"email": "amusic@gmail.com", "password": "notcoxinha123"}`,
+			user: models.User{
+				Email:    "notspiderman@gmail.com",
+				Password: "itsnotcorrect",
+			},
 			statusCode:   http.StatusUnprocessableEntity,
 			errorMessage: "incorrect password",
 		},
 		{
-			inputJSON:    `{"email": "agmail.com", "password": "coxinha123"}`,
+			user: models.User{
+				Email:    "agmail.com",
+				Password: "coxinha123",
+			},
 			statusCode:   http.StatusUnprocessableEntity,
 			errorMessage: "invalid email",
 		},
 		{
-			inputJSON:    `{"email": "", "password": "web123"}`,
+			user: models.User{
+				Email:    "",
+				Password: "web123",
+			},
 			statusCode:   http.StatusUnprocessableEntity,
 			errorMessage: "field 'Email' is required",
 		},
 		{
-			inputJSON:    `{"email": "notspiderman@gmail.com", "password": ""}`,
+			user: models.User{
+				Email:    "notspiderman@gmail.com",
+				Password: "",
+			},
 			statusCode:   http.StatusUnprocessableEntity,
 			errorMessage: "field 'Password' is required",
 		},
 	}
 
 	for _, v := range *users {
-		req, err := http.NewRequest("POST", "/login", bytes.NewBufferString(v.inputJSON))
+		jsonUser, err := json.Marshal(v.user)
+		if err != nil {
+			t.Errorf("error mashalling json: %v", err)
+		}
+
+		req, err := http.NewRequest("POST", "/login", bytes.NewBuffer(jsonUser))
 		if err != nil {
 			t.Errorf("this is the error: %v", err)
 		}
@@ -104,7 +150,7 @@ func TestLogin(t *testing.T) {
 		handler.ServeHTTP(rr, req)
 
 		if rr.Code != v.statusCode {
-			t.Errorf("error: status code expected to be equal %d but was %d", v.statusCode, rr.Code)
+			t.Errorf("error: status code expected to be equal %d but was %d\n Response Body: %v", v.statusCode, rr.Code, rr.Body.String())
 		} else if v.statusCode == 200 && rr.Body.String() == "" {
 			t.Errorf("error: body is empty")
 		}
@@ -113,7 +159,6 @@ func TestLogin(t *testing.T) {
 			responseMap := make(map[string]interface{})
 			err = json.Unmarshal(rr.Body.Bytes(), &responseMap)
 			if err != nil {
-				fmt.Println(rr.Body.String())
 				t.Errorf("Cannot convert to json: %v", err)
 			}
 			if responseMap["error"] != v.errorMessage {
@@ -121,5 +166,4 @@ func TestLogin(t *testing.T) {
 			}
 		}
 	}
-
 }

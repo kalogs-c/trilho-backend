@@ -52,12 +52,13 @@ func TestCollectUserTransactions(t *testing.T) {
 func TestUpdateTransaction(t *testing.T) {
 	transactionCopy := *transaction
 
+	transaction.ID = 1
 	transaction.Amount = 500
 	transaction.Name = "Potato"
 
 	err := transaction.UpdateTransaction(serverInstance.DB)
 	if err != nil {
-		t.Errorf("error updating transaction")
+		t.Errorf("error updating transaction: %v", err.Error())
 		return
 	}
 

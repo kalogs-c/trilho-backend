@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"html"
 	"strings"
 	"time"
@@ -87,14 +86,13 @@ func (u *User) Save(db *gorm.DB) error {
 		if strings.Contains(err.Error(), "Error 1062:") {
 			return errors.New("email already taken")
 		}
-		fmt.Println(err)
 		return err
 	}
 	return nil
 }
 
 func (u *User) Delete(db *gorm.DB) error {
-	err := db.Debug().Delete(&u).Error
+	err := db.Debug().Model(&u).Where("id = ? or email = ?", u.ID, u.Email).Delete(&u).Error
 	if err != nil {
 		return err
 	}
@@ -111,20 +109,21 @@ func (u *User) FindAllUsers(db *gorm.DB) (*[]User, error) {
 }
 
 func (u *User) UpdateUser(db *gorm.DB) error {
-	err := u.hashPassword()
+	err := u.Validate("update")
 	if err != nil {
 		return err
 	}
-	db = db.Debug().Model(&User{}).Where("id = ?", u.ID).Take(&User{}).UpdateColumns(
-		map[string]interface{}{
-			"name":      u.Name,
-			"last_name": u.LastName,
-			"email":     u.Email,
-			"password":  u.Password,
-		},
-	)
-	if db.Error != nil {
-		return db.Error
+
+	err = u.hashPassword()
+	if err != nil {
+		return err
+	}
+	err = db.Debug().Model(&User{}).Where("id = ?", u.ID).Update(&u).Error
+	if err != nil {
+		if strings.Contains(err.Error(), "Error 1062:") {
+			return errors.New("email already taken")
+		}
+		return err
 	}
 
 	err = db.Debug().Model(&User{}).Where("id = ?", u.ID).Take(&u).Error
@@ -135,7 +134,7 @@ func (u *User) UpdateUser(db *gorm.DB) error {
 }
 
 func (u *User) CollectUserData(db *gorm.DB) error {
-	err := db.Debug().Model(&User{}).Where("id = ?", u.ID).Take(&u).Error
+	err := db.Debug().Model(&User{}).Where("id = ? or email = ?", u.ID, u.Email).Take(&u).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return errors.New("user not found")
 	} else if err != nil {

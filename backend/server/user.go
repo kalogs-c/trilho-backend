@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/kalogsc/ego/auth"
@@ -47,7 +48,6 @@ func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId, err := strconv.ParseInt(vars["id"], 10, 32)
 	if err != nil {
-		fmt.Println(err)
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return
 	}
@@ -107,7 +107,12 @@ func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	err = user.UpdateUser(server.DB)
 	if err != nil {
-		responses.ERROR(w, http.StatusInternalServerError, err)
+		switch err.Error() {
+		case "email already taken":
+			responses.ERROR(w, http.StatusConflict, err)
+		default:
+			responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		}
 		return
 	}
 	responses.JSON(w, http.StatusOK, user)
@@ -117,7 +122,12 @@ func (server *Server) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId, err := strconv.ParseInt(vars["id"], 10, 32)
 	if err != nil {
-		responses.ERROR(w, http.StatusBadRequest, err)
+		if strings.Contains(err.Error(), "Cannot convert this id to an integer") {
+			responses.ERROR(w, http.StatusUnprocessableEntity, errors.New("cannot convert this id to an integer"))
+		} else {
+			responses.ERROR(w, http.StatusBadRequest, err)
+		}
+		return
 	}
 
 	jwtUserId, err := auth.ExtractTokenID(r)
@@ -138,5 +148,9 @@ func (server *Server) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Entity", fmt.Sprintf("%d", userId))
-	responses.JSON(w, http.StatusOK, "Deleted sucessfully")
+
+	responseMap := make(map[string]string)
+	responseMap["message"] = "Deleted sucessfully"
+
+	responses.JSON(w, http.StatusOK, responseMap)
 }

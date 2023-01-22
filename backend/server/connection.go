@@ -43,7 +43,15 @@ func (server *Server) Initialize(DbName string, mode utils.DbModeEnum) {
 	}
 	fmt.Println("Connected to mysql database.")
 
-	server.DB.Debug().AutoMigrate(&models.User{}, &models.Transaction{})
+	err = server.DB.Debug().AutoMigrate(&models.User{}, &models.Transaction{}).Error
+	if err != nil {
+		log.Fatalf("cannot migrate table: %v", err)
+	}
+
+	err = server.DB.Debug().Model(&models.Transaction{}).AddForeignKey("owner_id", "users(id)", "cascade", "cascade").Error
+	if err != nil {
+		log.Fatalf("attaching foreign key error: %v", err)
+	}
 
 	server.Router = mux.NewRouter()
 
