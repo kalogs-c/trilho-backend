@@ -1,6 +1,4 @@
-- Tests
 - Migrate from sql to cloud datastore
 - Cache
-- Separe server from controllers
 - Deploy github actions
 - Doc
