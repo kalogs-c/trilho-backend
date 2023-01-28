@@ -1,3 +1,2 @@
 - Cache
-- Deploy github actions
 - Doc
