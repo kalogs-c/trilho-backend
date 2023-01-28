@@ -39,10 +39,10 @@ jobs:
 
     # Deploy on Cloud Run
     - name: Deploy on Cloud Run
-      run: gcloud run deploy trilho-backend \
-            --image $IMAGE --region us-central1 \
-            --memory 128Mi --min-instances 0 --max-instances 1 \
-            --port 80 --allow-unauthenticated \
+      run: gcloud run deploy trilho-backend
+            --image $IMAGE --region us-central1
+            --memory 128Mi --min-instances 0 --max-instances 1
+            --port 80 --allow-unauthenticated
             --set-env-vars "DB_USER=${{ secrets.DB_USER }},
                             DB_PASSWORD=${{ secrets.DB_PASSWORD }},
                             DB_HOST=${{ secrets.DB_HOST }},
