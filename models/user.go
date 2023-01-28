@@ -18,7 +18,7 @@ type User struct {
 	LastName  string    `json:"last_name" gorm:"size:100;not null"`
 	Email     string    `json:"email" gorm:"size:100;not null;unique"`
 	Password  string    `json:"password" gorm:"size:100;not null"`
-	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
+	CreatedAt time.Time `json:"created_at" gorm:"precision=3;not null"`
 }
 
 func VerifyPassword(hashedPassword, password string) error {

@@ -14,7 +14,7 @@ type Transaction struct {
 	Amount    float64   `json:"amount" gorm:"not null"`
 	Name      string    `json:"name" gorm:"size:100;not null"`
 	OwnerId   uint32    `json:"owner_id" gorm:"not null"`
-	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
+	CreatedAt time.Time `json:"created_at" gorm:"precision=3;not null"`
 }
 
 func (t *Transaction) prepare() {
