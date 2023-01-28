@@ -14,11 +14,11 @@ jobs:
     steps:
     # Checkout
     - name: Checkout
-    - uses: actions/checkout@v3
+      uses: actions/checkout@v3
 
     # GCP Login
     - name: Login
-    - uses: google-github-actions/setup-gcloud@v1
+      uses: google-github-actions/setup-gcloud@v1
       with:
         service-account-key: $({ secrets.GCP_ACCOUNT_KEY })
         project-id: $({ secrets.GCP_PROJECT_ID })
