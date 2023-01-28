@@ -45,7 +45,7 @@ jobs:
             --port 80 --allow-unauthenticated \
             --set-env-vars "DB_USER=${{ secrets.DB_USER }}" \
             --set-env-vars "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" \
-            --set-env-vars "DB_HOST=${{ secrets.DB_HOST }}.freesqldatabase.com" \
+            --set-env-vars "DB_HOST=${{ secrets.DB_HOST }}" \
             --set-env-vars "DB_PORT=${{ secrets.DB_PORT }}" \
             --set-env-vars "DB_NAME=${{ secrets.DB_NAME }}" \
             --set-env-vars "API_SECRET=${{ secrets.API_SECRET }}"
