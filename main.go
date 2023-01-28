@@ -20,10 +20,11 @@ func main() {
 		}
 		serverInstance.Initialize(os.Getenv("TEST_DB_NAME"), utils.DB_MODE_TEST)
 		seed.Load(serverInstance.DB)
+		serverInstance.Run(":8080")
 	} else {
 		serverInstance.Initialize(os.Getenv("DB_NAME"), utils.DB_MODE_PROD)
 		seed.Load(serverInstance.DB)
+		serverInstance.Run(":80")
 	}
 
-	serverInstance.Run(":8080")
 }
