@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/kalogsc/ego/auth"
-	"github.com/kalogsc/ego/responses"
+	"github.com/kalogsc/trilho/auth"
+	"github.com/kalogsc/trilho/responses"
 )
 
 func FormatToJSON(next http.HandlerFunc) http.HandlerFunc {

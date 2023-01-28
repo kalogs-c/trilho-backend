@@ -9,7 +9,7 @@ services:
     env_file:
       - ./.env
     networks:
-      - ego-network
+      - trilho-network
     ports:
       - 8080:8080
     volumes:
@@ -29,7 +29,7 @@ services:
       - MYSQL_DATABASE=${TEST_DB_NAME}
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     networks:
-      - ego-network
+      - trilho-network
   
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -45,8 +45,8 @@ services:
       - 9090:80
     restart: always
     networks:
-      - ego-network
+      - trilho-network
     
 networks:
-  ego-network:
+  trilho-network:
     driver: bridge

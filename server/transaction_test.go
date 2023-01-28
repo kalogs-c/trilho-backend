@@ -11,8 +11,8 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/kalogsc/ego/models"
-	"github.com/kalogsc/ego/seed"
+	"github.com/kalogsc/trilho/models"
+	"github.com/kalogsc/trilho/seed"
 )
 
 func TestCreateTransaction(t *testing.T) {
@@ -222,7 +222,7 @@ func TestUpdateTransaction(t *testing.T) {
 	oldTransaction = (*transactionsList)[0]
 
 	updateTransaction := &models.Transaction{
-		ID: oldTransaction.ID,
+		ID:      oldTransaction.ID,
 		Name:    "CD Player",
 		Amount:  250,
 		OwnerId: user.ID,
@@ -253,7 +253,7 @@ func TestUpdateTransaction(t *testing.T) {
 		},
 		{
 			transaction: &models.Transaction{
-				ID: oldTransaction.ID,
+				ID:      oldTransaction.ID,
 				Name:    "",
 				Amount:  250,
 				OwnerId: user.ID,
@@ -264,7 +264,7 @@ func TestUpdateTransaction(t *testing.T) {
 		},
 		{
 			transaction: &models.Transaction{
-				ID: oldTransaction.ID,
+				ID:      oldTransaction.ID,
 				Name:    "",
 				Amount:  250,
 				OwnerId: 100,

@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/jinzhu/gorm"
-	"github.com/kalogsc/ego/models"
+	"github.com/kalogsc/trilho/models"
 )
 
 var users = []models.User{

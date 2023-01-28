@@ -1,4 +1,3 @@
-- Migrate from sql to cloud datastore
 - Cache
 - Deploy github actions
 - Doc

@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/kalogsc/ego/models"
-	"github.com/kalogsc/ego/seed"
+	"github.com/kalogsc/trilho/models"
+	"github.com/kalogsc/trilho/seed"
 )
 
 func TestSignIn(t *testing.T) {

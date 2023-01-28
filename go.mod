@@ -1,4 +1,4 @@
-module github.com/kalogsc/ego
+module github.com/kalogsc/trilho
 
 go 1.19
 

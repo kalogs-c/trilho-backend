@@ -1,6 +1,6 @@
 package server
 
-import "github.com/kalogsc/ego/middlewares"
+import "github.com/kalogsc/trilho/middlewares"
 
 func (server *Server) initializeRoutes() {
 	server.Router.HandleFunc("/", middlewares.FormatToJSON(server.HealthChecker)).Methods("GET")

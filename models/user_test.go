@@ -3,8 +3,8 @@ package models_test
 import (
 	"testing"
 
-	"github.com/kalogsc/ego/models"
-	"github.com/kalogsc/ego/seed"
+	"github.com/kalogsc/trilho/models"
+	"github.com/kalogsc/trilho/seed"
 )
 
 func TestCreateUser(t *testing.T) {
@@ -51,7 +51,7 @@ func TestGetUserData(t *testing.T) {
 		return
 	}
 	user := &models.User{
-		Email:    "zoro@email.com",
+		Email: "zoro@email.com",
 	}
 	err = user.CollectUserData(serverInstance.DB)
 	userCopy := *user

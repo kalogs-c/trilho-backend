@@ -10,15 +10,15 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/kalogsc/ego/models"
-	"github.com/kalogsc/ego/seed"
+	"github.com/kalogsc/trilho/models"
+	"github.com/kalogsc/trilho/seed"
 )
 
 func TestCreateUser(t *testing.T) {
 	users := &[]struct {
-		user               *models.User
-		expectedStatusCode int
-		expectedErrorMessage       string
+		user                 *models.User
+		expectedStatusCode   int
+		expectedErrorMessage string
 	}{
 		{
 			user: &models.User{
@@ -27,8 +27,8 @@ func TestCreateUser(t *testing.T) {
 				Email:    "carlos@gmail.com",
 				Password: "carlinhos!",
 			},
-			expectedStatusCode: http.StatusCreated,
-			expectedErrorMessage:       "",
+			expectedStatusCode:   http.StatusCreated,
+			expectedErrorMessage: "",
 		},
 		{
 			user: &models.User{
@@ -37,8 +37,8 @@ func TestCreateUser(t *testing.T) {
 				Email:    "carlos@gmail.com",
 				Password: "notcarlinhos!",
 			},
-			expectedStatusCode: http.StatusConflict,
-			expectedErrorMessage:       "email already taken",
+			expectedStatusCode:   http.StatusConflict,
+			expectedErrorMessage: "email already taken",
 		},
 		{
 			user: &models.User{
@@ -47,8 +47,8 @@ func TestCreateUser(t *testing.T) {
 				Email:    "mariagmail.com",
 				Password: "maria!",
 			},
-			expectedStatusCode: http.StatusUnprocessableEntity,
-			expectedErrorMessage:       "invalid email",
+			expectedStatusCode:   http.StatusUnprocessableEntity,
+			expectedErrorMessage: "invalid email",
 		},
 		{
 			user: &models.User{
@@ -57,8 +57,8 @@ func TestCreateUser(t *testing.T) {
 				Email:    "maria@gmail.com",
 				Password: "maria!",
 			},
-			expectedStatusCode: http.StatusUnprocessableEntity,
-			expectedErrorMessage:       "field 'Name' is required",
+			expectedStatusCode:   http.StatusUnprocessableEntity,
+			expectedErrorMessage: "field 'Name' is required",
 		},
 		{
 			user: &models.User{
@@ -67,8 +67,8 @@ func TestCreateUser(t *testing.T) {
 				Email:    "maria@gmail.com",
 				Password: "maria!",
 			},
-			expectedStatusCode: http.StatusUnprocessableEntity,
-			expectedErrorMessage:       "field 'LastName' is required",
+			expectedStatusCode:   http.StatusUnprocessableEntity,
+			expectedErrorMessage: "field 'LastName' is required",
 		},
 		{
 			user: &models.User{
@@ -77,8 +77,8 @@ func TestCreateUser(t *testing.T) {
 				Email:    "",
 				Password: "maria!",
 			},
-			expectedStatusCode: http.StatusUnprocessableEntity,
-			expectedErrorMessage:       "field 'Email' is required",
+			expectedStatusCode:   http.StatusUnprocessableEntity,
+			expectedErrorMessage: "field 'Email' is required",
 		},
 		{
 			user: &models.User{
@@ -87,8 +87,8 @@ func TestCreateUser(t *testing.T) {
 				Email:    "maria@gmail.com",
 				Password: "",
 			},
-			expectedStatusCode: http.StatusUnprocessableEntity,
-			expectedErrorMessage:       "field 'Password' is required",
+			expectedStatusCode:   http.StatusUnprocessableEntity,
+			expectedErrorMessage: "field 'Password' is required",
 		},
 	}
 

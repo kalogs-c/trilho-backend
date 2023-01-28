@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/kalogsc/ego/models"
-	"github.com/kalogsc/ego/utils"
+	"github.com/kalogsc/trilho/models"
+	"github.com/kalogsc/trilho/utils"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"

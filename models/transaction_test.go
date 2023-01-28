@@ -3,7 +3,7 @@ package models_test
 import (
 	"testing"
 
-	"github.com/kalogsc/ego/models"
+	"github.com/kalogsc/trilho/models"
 )
 
 var transaction *models.Transaction = &models.Transaction{

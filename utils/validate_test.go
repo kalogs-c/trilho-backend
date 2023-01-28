@@ -3,7 +3,7 @@ package utils_test
 import (
 	"testing"
 
-	"github.com/kalogsc/ego/utils"
+	"github.com/kalogsc/trilho/utils"
 )
 
 func TestValidateName(t *testing.T) {

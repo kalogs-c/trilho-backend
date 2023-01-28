@@ -3,9 +3,9 @@ package server
 import (
 	"net/http"
 
-	"github.com/kalogsc/ego/responses"
+	"github.com/kalogsc/trilho/responses"
 )
 
 func (server *Server) HealthChecker(w http.ResponseWriter, r *http.Request) {
-	responses.JSON(w, http.StatusOK, "Ego Backend HC")
+	responses.JSON(w, http.StatusOK, "trilho Backend HC")
 }

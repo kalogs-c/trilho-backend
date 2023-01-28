@@ -6,9 +6,9 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/kalogsc/ego/auth"
-	"github.com/kalogsc/ego/models"
-	"github.com/kalogsc/ego/responses"
+	"github.com/kalogsc/trilho/auth"
+	"github.com/kalogsc/trilho/models"
+	"github.com/kalogsc/trilho/responses"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -8,7 +8,7 @@ import (
 
 	"github.com/badoux/checkmail"
 	"github.com/jinzhu/gorm"
-	"github.com/kalogsc/ego/utils"
+	"github.com/kalogsc/trilho/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 

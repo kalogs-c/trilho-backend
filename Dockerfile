@@ -4,12 +4,12 @@ WORKDIR /app
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -o ego .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o trilho .
 
 FROM scratch
 
-COPY --from=builder /app/ego .
+COPY --from=builder /app/trilho .
 
 EXPOSE 8080
 
-ENTRYPOINT [ "./ego" ]
+ENTRYPOINT [ "./trilho" ]

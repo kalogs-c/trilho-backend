@@ -7,9 +7,9 @@ import (
 	"testing"
 
 	"github.com/joho/godotenv"
-	"github.com/kalogsc/ego/seed"
-	"github.com/kalogsc/ego/server"
-	"github.com/kalogsc/ego/utils"
+	"github.com/kalogsc/trilho/seed"
+	"github.com/kalogsc/trilho/server"
+	"github.com/kalogsc/trilho/utils"
 )
 
 var serverInstance = server.Server{}
