@@ -8,7 +8,7 @@ jobs:
   deploy:
     name: Setup GCP Account
     runs-on: ubuntu-latest
-    environment: gcp-prod
+    environment: gcp
     env:
       IMAGE: gcr.io/$({ secrets.GCP_PROJECT_ID })/trilho:latest
     steps:
