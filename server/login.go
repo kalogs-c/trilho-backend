@@ -36,7 +36,7 @@ func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		switch err.Error() {
 		case bcrypt.ErrMismatchedHashAndPassword.Error():
-			responses.ERROR(w, http.StatusUnprocessableEntity, errors.New("incorrect password"))
+			responses.ERROR(w, http.StatusUnprocessableEntity, errors.New("incorrect username or password"))
 		case "record not found":
 			responses.ERROR(w, http.StatusNotFound, err)
 		default:
