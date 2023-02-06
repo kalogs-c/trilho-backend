@@ -19,7 +19,6 @@ func TestCreateTransaction(t *testing.T) {
 		t.Errorf("error creating an transaction: %v\n", err)
 		return
 	}
-
 	if transactionCopy.Name != transaction.Name {
 		t.Errorf("Expected name field be equal %v\n", transaction.Name)
 		return
@@ -29,7 +28,7 @@ func TestCreateTransaction(t *testing.T) {
 		return
 	}
 	if transactionCopy.OwnerId != transaction.OwnerId {
-		t.Errorf("Expected email field be equal %d\n", transaction.OwnerId)
+		t.Errorf("Expected owner_id field be equal %d\n", transaction.OwnerId)
 		return
 	}
 
@@ -71,7 +70,7 @@ func TestUpdateTransaction(t *testing.T) {
 		return
 	}
 	if transactionCopy.OwnerId != transaction.OwnerId {
-		t.Errorf("Expected email field be equal %d\n", transaction.OwnerId)
+		t.Errorf("Expected owner_id field be equal %d\n", transaction.OwnerId)
 		return
 	}
 }

@@ -11,13 +11,13 @@ var users = []models.User{
 	{
 		Name:     "Peter",
 		LastName: "Parker",
-		Email:    "notspiderman@gmail.com",
+		Username: "notspiderman",
 		Password: "web123",
 	},
 	{
 		Name:     "Alessia",
 		LastName: "Cara",
-		Email:    "amusic@gmail.com",
+		Username: "amusic",
 		Password: "coxinha123",
 	},
 }

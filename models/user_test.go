@@ -11,7 +11,7 @@ func TestCreateUser(t *testing.T) {
 	user := &models.User{
 		Name:     "Carlos",
 		LastName: "Henrique",
-		Email:    "carlos@email.com",
+		Username:    "carlitos",
 		Password: "potato123",
 	}
 	userCopy := *user
@@ -27,8 +27,8 @@ func TestCreateUser(t *testing.T) {
 	if userCopy.LastName != user.LastName {
 		t.Errorf("Expected lastname field be equal %v\n", user.LastName)
 	}
-	if userCopy.Email != user.Email {
-		t.Errorf("Expected email field be equal %v\n", user.Email)
+	if userCopy.Username != user.Username {
+		t.Errorf("Expected username field be equal %v\n", user.Username)
 	}
 	if userCopy.Password == user.Password {
 		t.Errorf("Expected password field be equal %v\n", user.Password)
@@ -42,7 +42,7 @@ func TestGetUserData(t *testing.T) {
 		{
 			Name:     "Zoro",
 			LastName: "Roronoa",
-			Email:    "zoro@email.com",
+			Username:    "zoro",
 			Password: "sword123",
 		},
 	})
@@ -51,7 +51,7 @@ func TestGetUserData(t *testing.T) {
 		return
 	}
 	user := &models.User{
-		Email: "zoro@email.com",
+		Username: "zoro",
 	}
 	err = user.CollectUserData(serverInstance.DB)
 	userCopy := *user
@@ -68,8 +68,8 @@ func TestGetUserData(t *testing.T) {
 		t.Errorf("Expected lastname field be equal %v\n", user.LastName)
 		return
 	}
-	if userCopy.Email != user.Email {
-		t.Errorf("Expected email field be equal %v\n", user.Email)
+	if userCopy.Username != user.Username {
+		t.Errorf("Expected username field be equal %v\n", user.Username)
 		return
 	}
 	if userCopy.Password != user.Password {
@@ -97,7 +97,7 @@ func TestUpdateUser(t *testing.T) {
 		ID:       1,
 		Name:     "Monkey",
 		LastName: "D. Luffy",
-		Email:    "luffy@email.com",
+		Username:    "luffy",
 		Password: "gomu123",
 	}
 	err := seed.LoadCustomUsers(serverInstance.DB, &[]*models.User{
@@ -111,7 +111,7 @@ func TestUpdateUser(t *testing.T) {
 
 	user.Name = "João"
 	user.LastName = "Caique"
-	user.Email = "jao@email.com"
+	user.Username = "jao"
 	user.Password = "Tomato123"
 
 	err = user.UpdateUser(serverInstance.DB)
@@ -128,8 +128,8 @@ func TestUpdateUser(t *testing.T) {
 		t.Errorf("Expected lastname field not be equal %v\n", user.LastName)
 		return
 	}
-	if userCopy.Email == user.Email {
-		t.Errorf("Expected email field not be equal %v\n", user.Email)
+	if userCopy.Username == user.Username {
+		t.Errorf("Expected username field not be equal %v\n", user.Username)
 		return
 	}
 }
@@ -139,7 +139,7 @@ func TestDeleteUser(t *testing.T) {
 		ID:       1,
 		Name:     "Monkey",
 		LastName: "D. Luffy",
-		Email:    "luffy@email.com",
+		Username:    "luffy",
 		Password: "gomu123",
 	}
 	err := seed.LoadCustomUsers(serverInstance.DB, &[]*models.User{

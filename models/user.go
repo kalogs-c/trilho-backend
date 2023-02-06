@@ -6,7 +6,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/badoux/checkmail"
 	"github.com/jinzhu/gorm"
 	"github.com/kalogsc/trilho/utils"
 	"golang.org/x/crypto/bcrypt"
@@ -16,7 +15,7 @@ type User struct {
 	ID        uint32    `json:"id" gorm:"primary_key;unique;auto_increment"`
 	Name      string    `json:"name" gorm:"size:100;not null"`
 	LastName  string    `json:"last_name" gorm:"size:100;not null"`
-	Email     string    `json:"email" gorm:"size:100;not null;unique"`
+	Username  string    `json:"username" gorm:"size:100;not null;unique"`
 	Password  string    `json:"password" gorm:"size:100;not null"`
 	CreatedAt time.Time `json:"created_at" gorm:"precision=3;not null"`
 }
@@ -37,7 +36,7 @@ func (u *User) hashPassword() error {
 func (u *User) prepare() {
 	u.Name = html.EscapeString(strings.TrimSpace(u.Name))
 	u.LastName = html.EscapeString(strings.TrimSpace(u.LastName))
-	u.Email = html.EscapeString(strings.TrimSpace(u.Email))
+	u.Username = html.EscapeString(strings.TrimSpace(u.Username))
 	u.Password = html.EscapeString(strings.TrimSpace(u.Password))
 	u.CreatedAt = time.Now()
 }
@@ -51,11 +50,8 @@ func (u *User) Validate(mode string) error {
 			return errors.New("field 'LastName' is required")
 		}
 	}
-	if u.Email == "" {
-		return errors.New("field 'Email' is required")
-	}
-	if err := checkmail.ValidateFormat(u.Email); err != nil {
-		return errors.New("invalid email")
+	if u.Username == "" {
+		return errors.New("field 'Username' is required")
 	}
 	if u.Password == "" {
 		return errors.New("field 'Password' is required")
@@ -84,7 +80,7 @@ func (u *User) Save(db *gorm.DB) error {
 	err = db.Debug().Create(&u).Error
 	if err != nil {
 		if strings.Contains(err.Error(), "Error 1062:") {
-			return errors.New("email already taken")
+			return errors.New("username already taken")
 		}
 		return err
 	}
@@ -92,7 +88,7 @@ func (u *User) Save(db *gorm.DB) error {
 }
 
 func (u *User) Delete(db *gorm.DB) error {
-	err := db.Debug().Model(&u).Where("id = ? or email = ?", u.ID, u.Email).Delete(&u).Error
+	err := db.Debug().Model(&u).Where("id = ? or Username = ?", u.ID, u.Username).Delete(&u).Error
 	if err != nil {
 		return err
 	}
@@ -121,7 +117,7 @@ func (u *User) UpdateUser(db *gorm.DB) error {
 	err = db.Debug().Model(&User{}).Where("id = ?", u.ID).Update(&u).Error
 	if err != nil {
 		if strings.Contains(err.Error(), "Error 1062:") {
-			return errors.New("email already taken")
+			return errors.New("username already taken")
 		}
 		return err
 	}
@@ -134,7 +130,7 @@ func (u *User) UpdateUser(db *gorm.DB) error {
 }
 
 func (u *User) CollectUserData(db *gorm.DB) error {
-	err := db.Debug().Model(&User{}).Where("id = ? or email = ?", u.ID, u.Email).Take(&u).Error
+	err := db.Debug().Model(&User{}).Where("id = ? or Username = ?", u.ID, u.Username).Take(&u).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return errors.New("user not found")
 	} else if err != nil {

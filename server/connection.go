@@ -26,8 +26,9 @@ func (server *Server) InstanciateDB(DbName string, mode utils.DbModeEnum) error 
 	if mode == utils.DB_MODE_PROD {
 		DbUrl = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), DbName)
 	} else if mode == utils.DB_MODE_TEST {
-		DbUrl = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("TEST_DB_HOST"), os.Getenv("DB_PORT"), DbName)
+		DbUrl = fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("TEST_DB_HOST"), DbName)
 	}
+	fmt.Println(DbUrl)
 	server.DB, err = gorm.Open("mysql", DbUrl)
 	if err != nil {
 		return err

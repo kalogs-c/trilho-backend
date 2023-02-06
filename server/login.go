@@ -44,13 +44,24 @@ func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	responses.JSON(w, http.StatusOK, token)
+	err = user.CollectUserData(server.DB)
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+	}
+	responseMap := struct{
+		User models.User `json:"user"`
+		Token string `json:"token"`
+	}{
+		User: user,
+		Token: token,
+	}
+	responses.JSON(w, http.StatusOK, responseMap)
 }
 
 func (server *Server) SignIn(user *models.User) (string, error) {
 	u := models.User{}
 
-	err := server.DB.Debug().Model(models.User{}).Where("email = ?", user.Email).Take(&u).Error
+	err := server.DB.Debug().Model(models.User{}).Where("username = ?", user.Username).Take(&u).Error
 	if err != nil {
 		return "", err
 	}

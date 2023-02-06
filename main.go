@@ -23,8 +23,6 @@ func main() {
 		serverInstance.Run(":8080")
 	} else {
 		serverInstance.Initialize(os.Getenv("DB_NAME"), utils.DB_MODE_PROD)
-		seed.Load(serverInstance.DB)
 		serverInstance.Run(":80")
 	}
-
 }

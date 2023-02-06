@@ -32,7 +32,7 @@ func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 	err = user.Save(server.DB)
 	if err != nil {
 		switch err.Error() {
-		case "email already taken":
+		case "username already taken":
 			responses.ERROR(w, http.StatusConflict, err)
 		default:
 			responses.ERROR(w, http.StatusUnprocessableEntity, err)
@@ -108,7 +108,7 @@ func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	err = user.UpdateUser(server.DB)
 	if err != nil {
 		switch err.Error() {
-		case "email already taken":
+		case "username already taken":
 			responses.ERROR(w, http.StatusConflict, err)
 		default:
 			responses.ERROR(w, http.StatusUnprocessableEntity, err)

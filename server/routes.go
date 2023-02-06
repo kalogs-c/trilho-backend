@@ -6,8 +6,8 @@ func (server *Server) initializeRoutes() {
 	server.Router.HandleFunc("/", middlewares.FormatToJSON(server.HealthChecker)).Methods("GET")
 
 	server.Router.HandleFunc("/login", middlewares.FormatToJSON(server.Login)).Methods("POST")
+	server.Router.HandleFunc("/sign-up", middlewares.FormatToJSON(server.CreateUser)).Methods("POST")
 
-	server.Router.HandleFunc("/user", middlewares.FormatToJSON(server.CreateUser)).Methods("POST")
 	server.Router.HandleFunc("/user", middlewares.FormatToJSON(server.ListUsers)).Methods("GET")
 	server.Router.HandleFunc("/user/{id}", middlewares.FormatToJSON(server.GetUser)).Methods("GET")
 	server.Router.HandleFunc("/user/{id}", middlewares.FormatToJSON(middlewares.Authentication(server.DeleteUser))).Methods("DELETE")

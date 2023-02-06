@@ -16,7 +16,7 @@ func TestSignIn(t *testing.T) {
 		{
 			Name:     "Alessia",
 			LastName: "Cara",
-			Email:    "amusic@gmail.com",
+			Username: "amusic",
 			Password: "coxinha123",
 		},
 	}
@@ -25,39 +25,44 @@ func TestSignIn(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	users := &[]models.User{
+	users := &[]struct {
+		user                 models.User
+		statusCode           int
+		expectedErrorMessage string
+	}{
 		{
-			Email:    "amusic@gmail.com",
-			Password: "coxinha123",
+			user: models.User{
+				Username: "amusic",
+				Password: "coxinha123",
+			},
+			expectedErrorMessage: "",
 		},
 		{
-			Email:    "amusic@gmail.com",
-			Password: "wrongpassword",
+			user: models.User{
+				Username: "amusic",
+				Password: "wrongpassword",
+			},
+			expectedErrorMessage: "crypto/bcrypt: hashedPassword is not the hash of the given password",
 		},
 		{
-			Email:    "notexist@gmail.com",
-			Password: "kalogs",
+			user: models.User{
+				Username: "notexist",
+				Password: "kalogs",
+			},
+			expectedErrorMessage: "record not found",
 		},
 	}
 
-	expectedErrors := &[]string{
-		"",
-		"crypto/bcrypt: hashedPassword is not the hash of the given password",
-		"record not found",
-	}
-
-	for i := range *users {
-		u := &(*users)[i]
-		expectedErr := &(*expectedErrors)[i]
-		token, err := serverInstance.SignIn(u)
+	for _, v := range *users {
+		token, err := serverInstance.SignIn(&v.user)
 		if err == nil && token != "" {
 			return
 		}
 
-		if err.Error() != *expectedErr {
-			t.Errorf("invalid error, expected to be %v but was %v", *expectedErr, err.Error())
+		if err.Error() != v.expectedErrorMessage {
+			t.Errorf("invalid error, expected to be %v but was %v", v.expectedErrorMessage, err.Error())
 		} else if err != nil {
-			t.Errorf("error while sign in: %e", err)
+			t.Errorf("error while sign in: %v", err.Error())
 		}
 
 		if token == "" {
@@ -71,7 +76,7 @@ func TestLogin(t *testing.T) {
 		{
 			Name:     "Peter",
 			LastName: "Parker",
-			Email:    "notspiderman@gmail.com",
+			Username: "notspiderman",
 			Password: "web123",
 		},
 	}
@@ -87,7 +92,7 @@ func TestLogin(t *testing.T) {
 	}{
 		{
 			user: models.User{
-				Email:    "notspiderman@gmail.com",
+				Username: "notspiderman",
 				Password: "web123",
 			},
 			statusCode:   http.StatusOK,
@@ -95,7 +100,7 @@ func TestLogin(t *testing.T) {
 		},
 		{
 			user: models.User{
-				Email:    "incorrect@gmail.com",
+				Username: "incorrect",
 				Password: "notexist",
 			},
 			statusCode:   http.StatusNotFound,
@@ -103,7 +108,7 @@ func TestLogin(t *testing.T) {
 		},
 		{
 			user: models.User{
-				Email:    "notspiderman@gmail.com",
+				Username: "notspiderman",
 				Password: "itsnotcorrect",
 			},
 			statusCode:   http.StatusUnprocessableEntity,
@@ -111,23 +116,15 @@ func TestLogin(t *testing.T) {
 		},
 		{
 			user: models.User{
-				Email:    "agmail.com",
-				Password: "coxinha123",
-			},
-			statusCode:   http.StatusUnprocessableEntity,
-			errorMessage: "invalid email",
-		},
-		{
-			user: models.User{
-				Email:    "",
+				Username: "",
 				Password: "web123",
 			},
 			statusCode:   http.StatusUnprocessableEntity,
-			errorMessage: "field 'Email' is required",
+			errorMessage: "field 'Username' is required",
 		},
 		{
 			user: models.User{
-				Email:    "notspiderman@gmail.com",
+				Username: "notspiderman",
 				Password: "",
 			},
 			statusCode:   http.StatusUnprocessableEntity,

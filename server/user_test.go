@@ -24,7 +24,7 @@ func TestCreateUser(t *testing.T) {
 			user: &models.User{
 				Name:     "Carlos",
 				LastName: "Henrique",
-				Email:    "carlos@gmail.com",
+				Username:    "carlos",
 				Password: "carlinhos!",
 			},
 			expectedStatusCode:   http.StatusCreated,
@@ -34,27 +34,17 @@ func TestCreateUser(t *testing.T) {
 			user: &models.User{
 				Name:     "Other",
 				LastName: "Carlos",
-				Email:    "carlos@gmail.com",
+				Username:    "carlos",
 				Password: "notcarlinhos!",
 			},
 			expectedStatusCode:   http.StatusConflict,
-			expectedErrorMessage: "email already taken",
-		},
-		{
-			user: &models.User{
-				Name:     "Maria",
-				LastName: "Santana",
-				Email:    "mariagmail.com",
-				Password: "maria!",
-			},
-			expectedStatusCode:   http.StatusUnprocessableEntity,
-			expectedErrorMessage: "invalid email",
+			expectedErrorMessage: "username already taken",
 		},
 		{
 			user: &models.User{
 				Name:     "",
 				LastName: "Santana",
-				Email:    "maria@gmail.com",
+				Username:    "maria",
 				Password: "maria!",
 			},
 			expectedStatusCode:   http.StatusUnprocessableEntity,
@@ -64,7 +54,7 @@ func TestCreateUser(t *testing.T) {
 			user: &models.User{
 				Name:     "Maria",
 				LastName: "",
-				Email:    "maria@gmail.com",
+				Username:    "maria",
 				Password: "maria!",
 			},
 			expectedStatusCode:   http.StatusUnprocessableEntity,
@@ -74,17 +64,17 @@ func TestCreateUser(t *testing.T) {
 			user: &models.User{
 				Name:     "Maria",
 				LastName: "Santana",
-				Email:    "",
+				Username:    "",
 				Password: "maria!",
 			},
 			expectedStatusCode:   http.StatusUnprocessableEntity,
-			expectedErrorMessage: "field 'Email' is required",
+			expectedErrorMessage: "field 'Username' is required",
 		},
 		{
 			user: &models.User{
 				Name:     "Maria",
 				LastName: "Santana",
-				Email:    "maria@gmail.com",
+				Username:    "maria",
 				Password: "",
 			},
 			expectedStatusCode:   http.StatusUnprocessableEntity,
@@ -128,8 +118,8 @@ func TestCreateUser(t *testing.T) {
 				t.Errorf("error: expected field 'last_name' be %v but was %v", responseMap["last_name"], v.user.LastName)
 				return
 			}
-			if responseMap["email"] != v.user.Email {
-				t.Errorf("error: expected field 'email' be %v but was %v", responseMap["email"], v.user.Email)
+			if responseMap["username"] != v.user.Username {
+				t.Errorf("error: expected field 'username' be %v but was %v", responseMap["username"], v.user.Username)
 				return
 			}
 			if responseMap["password"] == v.user.Password {
@@ -177,7 +167,7 @@ func TestGetUser(t *testing.T) {
 	user := &models.User{
 		Name:     "Test",
 		LastName: "Serious Test",
-		Email:    "really@serious.com",
+		Username:    "really",
 		Password: "trust_me157",
 	}
 	err := seed.LoadCustomUsers(serverInstance.DB, &[]*models.User{user})
@@ -218,8 +208,8 @@ func TestGetUser(t *testing.T) {
 		t.Errorf("Expected lastname field be equal %v but was %v\n", user.LastName, userFromResponse.LastName)
 		return
 	}
-	if userFromResponse.Email != user.Email {
-		t.Errorf("Expected email field be equal %v but was %v\n", user.Email, userFromResponse.Email)
+	if userFromResponse.Username != user.Username {
+		t.Errorf("Expected username field be equal %v but was %v\n", user.Username, userFromResponse.Username)
 		return
 	}
 	if userFromResponse.Password != user.Password {
@@ -235,20 +225,20 @@ func TestUpdateUser(t *testing.T) {
 		{
 			Name:     "Babidi",
 			LastName: "From DBZ",
-			Email:    "babidi@gmail.com",
+			Username:    "babidi",
 			Password: "majinboo",
 		},
 		{
 			Name:     "Goku",
 			LastName: "Kakarot",
-			Email:    "goku@gmail.com",
+			Username:    "goku",
 			Password: "kamehameha",
 		},
 	}
 	seed.LoadCustomUsers(serverInstance.DB, customUsers)
 
 	for _, user := range *customUsers {
-		if user.Email == "goku@gmail.com" {
+		if user.Username == "goku" {
 			userForAuth = *user
 			userForAuth.Password = "kamehameha"
 		}
@@ -272,7 +262,7 @@ func TestUpdateUser(t *testing.T) {
 				ID:       userForAuth.ID,
 				Name:     "Vegeta",
 				LastName: "King",
-				Email:    "vegeta@gmail.com",
+				Username:    "vegeta",
 				Password: "notkamehameha",
 			},
 			expectedStatusCode:   http.StatusOK,
@@ -285,7 +275,7 @@ func TestUpdateUser(t *testing.T) {
 				ID:       userForAuth.ID,
 				Name:     "Vegeta",
 				LastName: "King",
-				Email:    "vegeta@gmail.com",
+				Username:    "vegeta",
 				Password: "notkamehameha",
 			},
 			expectedStatusCode:   http.StatusUnauthorized,
@@ -298,7 +288,7 @@ func TestUpdateUser(t *testing.T) {
 				ID:       userForAuth.ID,
 				Name:     "Vegeta",
 				LastName: "King",
-				Email:    "vegeta@gmail.com",
+				Username:    "vegeta",
 				Password: "notkamehameha",
 			},
 			expectedStatusCode:   http.StatusUnauthorized,
@@ -310,24 +300,12 @@ func TestUpdateUser(t *testing.T) {
 				ID:       userForAuth.ID,
 				Name:     "Babidi",
 				LastName: "From DBZ",
-				Email:    "babidi@gmail.com",
+				Username:    "babidi",
 				Password: "majinboo",
 			},
 			expectedStatusCode:   http.StatusConflict,
 			tokenGiven:           tokenString,
-			expectedErrorMessage: "email already taken",
-		},
-		{
-			updateUser: models.User{
-				ID:       userForAuth.ID,
-				Name:     "Vegeta",
-				LastName: "King",
-				Email:    "vegetagmail.com",
-				Password: "notkamehameha",
-			},
-			expectedStatusCode:   http.StatusUnprocessableEntity,
-			tokenGiven:           tokenString,
-			expectedErrorMessage: "invalid email",
+			expectedErrorMessage: "username already taken",
 		},
 		{
 			// When user 2 is using user 1 token
@@ -335,7 +313,7 @@ func TestUpdateUser(t *testing.T) {
 				ID:       1,
 				Name:     "Vegeta",
 				LastName: "King",
-				Email:    "vegeta@gmail.com",
+				Username:    "vegeta",
 				Password: "notkamehameha",
 			},
 			tokenGiven:           tokenString,
@@ -384,8 +362,8 @@ func TestUpdateUser(t *testing.T) {
 				t.Errorf("Expected name field be equal %v but was %v\n", v.updateUser.LastName, responseMap["last_name"])
 				return
 			}
-			if responseMap["email"] != v.updateUser.Email {
-				t.Errorf("Expected name field be equal %v but was %v\n", v.updateUser.Name, responseMap["email"])
+			if responseMap["username"] != v.updateUser.Username {
+				t.Errorf("Expected name field be equal %v but was %v\n", v.updateUser.Name, responseMap["username"])
 				return
 			}
 		} else if v.expectedErrorMessage != "" && v.expectedStatusCode == rr.Code {
@@ -404,20 +382,20 @@ func TestDeleteUser(t *testing.T) {
 		{
 			Name:     "Majin",
 			LastName: "Boo",
-			Email:    "boo@gmail.com",
+			Username:    "boo",
 			Password: "chocolate",
 		},
 		{
 			Name:     "Naruto",
 			LastName: "Uzumaki",
-			Email:    "naruto@gmail.com",
+			Username:    "naruto",
 			Password: "ninetail",
 		},
 	}
 	seed.LoadCustomUsers(serverInstance.DB, customUsers)
 
 	for _, user := range *customUsers {
-		if user.Email == "boo@gmail.com" {
+		if user.Username == "boo" {
 			userForAuth = *user
 			userForAuth.Password = "chocolate"
 		}

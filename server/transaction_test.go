@@ -19,7 +19,7 @@ func TestCreateTransaction(t *testing.T) {
 	user := &models.User{
 		Name:     "Zakk",
 		LastName: "Wylde",
-		Email:    "zakk@gmail.com",
+		Username:    "zakk",
 		Password: "guitar123",
 	}
 	err := seed.LoadCustomUsers(serverInstance.DB, &[]*models.User{user})
@@ -143,7 +143,7 @@ func TestListUsersTransactions(t *testing.T) {
 	user := &models.User{
 		Name:     "Zakk",
 		LastName: "Wylde",
-		Email:    "zakk@gmail.com",
+		Username:    "zakk",
 		Password: "guitar123",
 	}
 	err := seed.LoadCustomUsers(serverInstance.DB, &[]*models.User{user})
@@ -194,7 +194,7 @@ func TestUpdateTransaction(t *testing.T) {
 	user := &models.User{
 		Name:     "Zakk",
 		LastName: "Wylde",
-		Email:    "zakk@gmail.com",
+		Username:    "zakk",
 		Password: "guitar123",
 	}
 	err := seed.LoadCustomUsers(serverInstance.DB, &[]*models.User{user})
@@ -331,7 +331,7 @@ func TestDeleteTransaction(t *testing.T) {
 	user := &models.User{
 		Name:     "Zakk",
 		LastName: "Wylde",
-		Email:    "zakk@gmail.com",
+		Username:    "zakk",
 		Password: "guitar123",
 	}
 	err := seed.LoadCustomUsers(serverInstance.DB, &[]*models.User{user})
