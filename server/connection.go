@@ -12,7 +12,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 type Server struct {
@@ -22,14 +22,7 @@ type Server struct {
 
 func (server *Server) InstanciateDB(DbName string, mode utils.DbModeEnum) error {
 	var err error
-	var DbUrl string
-	if mode == utils.DB_MODE_PROD {
-		DbUrl = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), DbName)
-	} else if mode == utils.DB_MODE_TEST {
-		DbUrl = fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("TEST_DB_HOST"), DbName)
-	}
-	fmt.Println(DbUrl)
-	server.DB, err = gorm.Open("mysql", DbUrl)
+	server.DB, err = gorm.Open("postgres", os.Getenv("DB_CONN"))
 	if err != nil {
 		return err
 	}
@@ -39,10 +32,10 @@ func (server *Server) InstanciateDB(DbName string, mode utils.DbModeEnum) error 
 func (server *Server) Initialize(DbName string, mode utils.DbModeEnum) {
 	err := server.InstanciateDB(DbName, mode)
 	if err != nil {
-		fmt.Println("Cannot connect to mysql database.")
+		fmt.Println("Cannot connect to postgres database.")
 		log.Fatal("Failed to connect to db: ", err)
 	}
-	fmt.Println("Connected to mysql database.")
+	fmt.Println("Connected to postgres database.")
 
 	err = server.DB.Debug().AutoMigrate(&models.User{}, &models.Transaction{}).Error
 	if err != nil {
