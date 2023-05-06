@@ -51,12 +51,6 @@ jobs:
         region: ${{ env.REGION }}
         image: ${{ env.IMAGE }}
         env_vars: |
-          PORT=80
           DB_CONN=${{ secrets.DB_CONN }}
-          DB_USER=${{ secrets.DB_USER }}
-          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          DB_HOST=${{ secrets.DB_HOST }}
-          DB_PORT=${{ secrets.DB_PORT }}
-          DB_NAME=${{ secrets.DB_NAME }}
           API_SECRET=${{ secrets.API_SECRET }}  
 

@@ -17,11 +17,8 @@ func main() {
 		if err != nil {
 			log.Fatalf("Error getting env's. Err: %v", err)
 		}
-		serverInstance.Initialize()
 		seed.Load(serverInstance.DB)
-		serverInstance.Run(":8080")
-	} else {
-		serverInstance.Initialize()
-		serverInstance.Run(":80")
-	}
+	} 
+	serverInstance.Initialize()
+	serverInstance.Run(":8080")
 }

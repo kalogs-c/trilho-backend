@@ -10,6 +10,6 @@ FROM scratch
 
 COPY --from=builder /app/trilho .
 
-EXPOSE 80
+EXPOSE 8080
 
 ENTRYPOINT [ "./trilho" ]
