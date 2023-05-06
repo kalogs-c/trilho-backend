@@ -6,9 +6,13 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -o trilho .
 
+RUN apk add -U --no-cache ca-certificates
+
 FROM scratch
 
 COPY --from=builder /app/trilho .
+
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ 
 
 EXPOSE 8080
 
