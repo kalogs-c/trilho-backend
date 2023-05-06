@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: gcp
     env:
-      IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/trilho:latest
+      IMAGE: carlinhoscamilo/trilho:latest
       PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       SERVICE: trilho 
       REGION: us-central1 
@@ -55,7 +55,7 @@ jobs:
       with:
         service: $SERVICE
         region: $REGION
-        image: $IMAGE/$PROJECT_ID/$SERVICE:${{ github.sha }}
+        image: $IMAGE
         env_vars: |
           DB_CONN=${{ secrets.DB_CONN }}
           DB_USER=${{ secrets.DB_USER }}
