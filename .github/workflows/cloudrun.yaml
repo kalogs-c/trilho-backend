@@ -28,14 +28,14 @@ jobs:
         credentials_json: ${{ secrets.GCP_ACCOUNT_KEY }}
 
     # Authenticate Docker to Google Cloud Artifact Registry
-    - name: Docker Auth
-      id: docker-auth
-      uses: 'docker/login-action@v1'
-      with:
-        username: 'oauth2accesstoken'
-        password: '${{ steps.auth.outputs.access_token }}'
-        registry: $IMAGE
-
+    # - name: Docker Auth
+    #   id: docker-auth
+    #   uses: 'docker/login-action@v1'
+    #   with:
+    #     username: 'oauth2accesstoken'
+    #     password: '${{ steps.auth.outputs.access_token }}'
+    #     registry: $IMAGE
+    #
     # - name: Build and Push Container
     #   run: |-
     #     docker build -t "$IMAGE/$PROJECT_ID/$SERVICE:${{ github.sha }}" ./
