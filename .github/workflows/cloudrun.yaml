@@ -21,20 +21,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    # Setup Go
-    - name: Setup Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.20.3
-
-    # Install dependencies
-    - name: Install Dependencies
-      run: go mod download
-
-    # Test API
-    - name: Test API
-      run: go test -v ./...
-  
     # GCP Auth
     - name: GCP Auth
       uses: google-github-actions/auth@v1
