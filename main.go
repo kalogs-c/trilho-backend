@@ -20,5 +20,5 @@ func main() {
 		seed.Load(serverInstance.DB)
 	} 
 	serverInstance.Initialize()
-	serverInstance.Run(":8080")
+	serverInstance.Run(":80")
 }
