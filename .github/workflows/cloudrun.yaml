@@ -1,0 +1,93 @@
+name: GCP
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    name: Deploy to Google Cloud Run
+    runs-on: ubuntu-latest
+    environment: gcp
+    env:
+      IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/trilho:latest
+      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      SERVICE: trilho 
+      REGION: us-central1 
+    steps:
+    # Checkout
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Setup Go
+    - name: Setup Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.20
+
+    # Test API
+    - name: Test API
+      run: |
+        go build -v ./...
+        go test -v ./...
+  
+    # GCP Auth
+    - name: GCP Auth
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_ACCOUNT_KEY }}
+
+    # Authenticate Docker to Google Cloud Artifact Registry
+    - name: Docker Auth
+      id: docker-auth
+      uses: 'docker/login-action@v1'
+      with:
+        username: 'oauth2accesstoken'
+        password: '${{ steps.auth.outputs.access_token }}'
+        registry: $IMAGE
+
+    # - name: Build and Push Container
+    #   run: |-
+    #     docker build -t "$IMAGE/$PROJECT_ID/$SERVICE:${{ github.sha }}" ./
+    #     docker push "$IMAGE/$PROJECT_ID/$SERVICE:${{ github.sha }}"
+
+    # Build image
+    - name: Build the Docker image
+      run: docker build -t $IMAGE .
+
+    # Push image to container registry
+    - name: Push image
+      run: docker push $IMAGE
+
+    # Deploy on Cloud Run
+    # - name: Deploy on Cloud Run
+    #   run: gcloud run deploy trilho-backend
+    #         --image $IMAGE --region us-central1
+    #         --memory 128Mi --min-instances 0 --max-instances 1
+    #         --port 80 --allow-unauthenticated
+    #         --set-env-vars "DB_CONN=${{ secrets.DB_CONN }},
+    #                         DB_USER=${{ secrets.DB_USER }},
+    #                         DB_PASSWORD=${{ secrets.DB_PASSWORD }},
+    #                         DB_HOST=${{ secrets.DB_HOST }},
+    #                         DB_PORT=${{ secrets.DB_PORT }},
+    #                         DB_NAME=${{ secrets.DB_NAME }},
+    #                         API_SECRET=${{ secrets.API_SECRET }}"
+
+    - name: Deploy to Cloud Run
+      id: deploy
+      uses: google-github-actions/deploy-cloudrun@v1
+      with:
+        service: $SERVICE
+        region: $REGION
+        image: $IMAGE/$PROJECT_ID/$SERVICE:${{ github.sha }}
+        env_vars: |
+          DB_CONN=${{ secrets.DB_CONN }}
+          DB_USER=${{ secrets.DB_USER }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          DB_HOST=${{ secrets.DB_HOST }}
+          DB_PORT=${{ secrets.DB_PORT }}
+          DB_NAME=${{ secrets.DB_NAME }}
+          API_SECRET=${{ secrets.API_SECRET }}  
+
