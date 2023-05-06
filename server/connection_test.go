@@ -9,7 +9,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kalogsc/trilho/models"
 	"github.com/kalogsc/trilho/server"
-	"github.com/kalogsc/trilho/utils"
 )
 
 var serverInstance = server.Server{}
@@ -25,7 +24,7 @@ func TestMain(m *testing.M) {
 }
 
 func database() {
-	err := serverInstance.InstanciateDB(os.Getenv("TEST_DB_NAME"), utils.DB_MODE_TEST)
+	err := serverInstance.InstanciateDB()
 	if err != nil {
 		fmt.Println("Cannot connect to the database")
 		log.Fatal("This is the error: ", err)

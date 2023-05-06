@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/kalogsc/trilho/models"
-	"github.com/kalogsc/trilho/utils"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
@@ -20,7 +19,7 @@ type Server struct {
 	Router *mux.Router
 }
 
-func (server *Server) InstanciateDB(DbName string, mode utils.DbModeEnum) error {
+func (server *Server) InstanciateDB() error {
 	var err error
 	server.DB, err = gorm.Open("postgres", os.Getenv("DB_CONN"))
 	if err != nil {
@@ -29,8 +28,8 @@ func (server *Server) InstanciateDB(DbName string, mode utils.DbModeEnum) error 
 	return nil
 }
 
-func (server *Server) Initialize(DbName string, mode utils.DbModeEnum) {
-	err := server.InstanciateDB(DbName, mode)
+func (server *Server) Initialize() {
+	err := server.InstanciateDB()
 	if err != nil {
 		fmt.Println("Cannot connect to postgres database.")
 		log.Fatal("Failed to connect to db: ", err)

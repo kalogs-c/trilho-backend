@@ -7,7 +7,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kalogsc/trilho/seed"
 	"github.com/kalogsc/trilho/server"
-	"github.com/kalogsc/trilho/utils"
 )
 
 var serverInstance server.Server = server.Server{}
@@ -18,11 +17,11 @@ func main() {
 		if err != nil {
 			log.Fatalf("Error getting env's. Err: %v", err)
 		}
-		serverInstance.Initialize(os.Getenv("TEST_DB_NAME"), utils.DB_MODE_TEST)
+		serverInstance.Initialize()
 		seed.Load(serverInstance.DB)
 		serverInstance.Run(":8080")
 	} else {
-		serverInstance.Initialize(os.Getenv("DB_NAME"), utils.DB_MODE_PROD)
+		serverInstance.Initialize()
 		serverInstance.Run(":80")
 	}
 }

@@ -50,8 +50,8 @@ jobs:
         service: ${{ env.SERVICE }}
         region: ${{ env.REGION }}
         image: ${{ env.IMAGE }}
-        port: 80
         env_vars: |
+          PORT=80
           DB_CONN=${{ secrets.DB_CONN }}
           DB_USER=${{ secrets.DB_USER }}
           DB_PASSWORD=${{ secrets.DB_PASSWORD }}
