@@ -14,6 +14,6 @@ COPY --from=builder /app/trilho .
 
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ 
 
-EXPOSE 8080
+EXPOSE 80
 
 ENTRYPOINT [ "./trilho" ]
