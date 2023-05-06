@@ -14,8 +14,8 @@ jobs:
     env:
       IMAGE: carlinhoscamilo/trilho:latest
       PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-      SERVICE: trilho 
-      REGION: us-central1 
+      SERVICE: trilho
+      REGION: us-central1
     steps:
     # Checkout
     - name: Checkout
