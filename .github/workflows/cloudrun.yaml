@@ -47,9 +47,9 @@ jobs:
       id: deploy
       uses: google-github-actions/deploy-cloudrun@v1
       with:
-        service: $SERVICE
-        region: $REGION
-        image: $IMAGE
+        service: ${{ env.SERVICE }}
+        region: ${{ env.REGION }}
+        image: ${{ env.IMAGE }}
         env_vars: |
           DB_CONN=${{ secrets.DB_CONN }}
           DB_USER=${{ secrets.DB_USER }}
